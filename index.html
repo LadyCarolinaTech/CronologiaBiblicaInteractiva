@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cronología Bíblica Interactiva</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+
+<style>
+/* ------------------------------------------------------------------ */
+/* ESTILOS GENERALES Y BOTONES   */
+/* ------------------------------------------------------------------ */
+
+body {
+  /* Fondo con textura de pergamino */
+  background: #f8f4e9 url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  font-family: 'Sen', sans-serif;
+  color: #3e2f1c;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== PERGAMINO CON TÍTULO CENTRADO ===== */
+.pergamino {
+  position: relative;
+  display: inline-block;
+  margin-top: 25px;
+}
+
+.pergamino img {
+  /* La imagen 'images.webp' debe existir en la misma carpeta */
+  width: 300px;
+  height: 220px;
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+  border-radius: 10px;
+}
+
+.titulo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'UnifrakturCook', cursive;
+  font-size: 2.4em;
+  line-height: 1.2em;
+  color: #4a3728;
+  text-shadow:
+    1px 1px 2px rgba(255,255,255,0.3),
+    -1px -1px 2px rgba(0,0,0,0.5);
+  width: 80%;
+  margin: 0;
+  text-align: center;
+}
+
+/* ===== CUADRÍCULA DE BOTONES (3 COLUMNAS) - AJUSTE CLAVE ===== */
+.button-grid {
+  /* Establece 3 columnas de igual tamaño */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 10px 20px 15px;
+  max-width: 900px; /* Ancho optimizado para 3 columnas grandes */
+  margin: 15px auto 10px auto;
+}
+
+/* Las clases .last-row-buttons y sus estilos ya no son necesarios
+   porque todos los botones caben en la cuadrícula 3x3. */
+
+
+button {
+  background: #f4e9d8;
+  border: 2px solid #c9a86a;
+  border-radius: 14px;
+  padding: 18px 10px;
+  font-size: 1.1em;
+  color: #4a3728;
+  cursor: pointer;
+  font-family: 'Sen', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  width: 100%; 
+}
+
+button:hover {
+  background: #e8d8b0;
+  color: #3e2f1c;
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+  border-color: #d4af37;
+}
+
+/* Media query para hacer la cuadrícula responsive */
+@media (max-width: 750px) {
+    .button-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+        max-width: 500px;
+    }
+}
+@media (max-width: 500px) {
+    .button-grid {
+        grid-template-columns: 1fr; /* 1 columna en pantallas muy pequeñas */
+    }
+}
+
+
+footer {
+  background: #f2e8d5;
+  color: #5b4a2e;
+  padding: 5px;
+  font-size: 0.9em;
+  margin-top: 0px;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* ESTILOS DEL MODAL (Visor de PDF)  */
+/* ------------------------------------------------------------------ */
+
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 1000; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: #f8f4e9; 
+  background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  padding-top: 20px;
+}
+
+.modal-content {
+  background-color: white; 
+  margin: 0 auto; 
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%; 
+  height: 95%; 
+  max-width: 1000px; 
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/* Título gótico del modal */
+.modal-header h2 {
+    font-family: 'UnifrakturCook', cursive;
+    color: #4a3728; 
+    font-size: 2em;
+    flex-grow: 1; 
+    text-align: center; 
+    margin: 0; 
+}
+
+.modal-body {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+}
+
+#pdfViewerContainer {
+    height: 100%; 
+    width: 100%; 
+    padding: 10px; 
+    box-sizing: border-box; 
+}
+
+/* Estilos para las páginas Canvas (El PDF renderizado) */
+#pdfViewerContainer canvas {
+    background-color: white !important; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    margin: 10px auto; 
+    display: block; 
+    max-width: 100%; 
+    height: auto;
+}
+
+.close {
+  color: #3e2f1c;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 10px;
+  transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #d4af37;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="pergamino">
+    <img src="images.webp" alt="Pergamino decorativo"> 
+    <h1 class="titulo">
+      Cronología<br>
+      Bíblica<br>
+      Interactiva
+    </h1>
+  </div>
+</header>
+
+<main>
+  <div class="button-grid">
+    
+    <button id="btnGenealogias">Genealogías</button>
+    <button id="btnPatriarcas">Patriarcas</button>
+    <button id="btnExodoJuecesMonarquia">De la Teocracia a la Monarquía</button>
+    
+    <button id="btnProfetas">Profetas</button>
+    <button id="btnDivisionReino">División del Reino</button>
+    <button id="btnIntertestamentario">Periodo Intertestamentario</button>
+    
+    <button id="btnDinastias">Dinastías</button>
+    <button id="btnApostoles">Apóstoles</button>
+    <button id="btnTemplo">El Templo de Jerusalén</button>
+    
+  </div>
+</main>
+
+<footer>
+  <strong>© 2025 Cronología Bíblica Interactiva — Inspirado en las Sagradas Escrituras</strong>
+</footer>
+
+
+<div id="pdfModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2></h2>
+      <span class="close" id="closeModal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div id="pdfViewerContainer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ------------------------------------------------------------------
+//                             JAVASCRIPT
+// ------------------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. CONFIGURACIÓN INICIAL
+    // Se asegura de que PDF.js esté listo
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
+    const modal = document.getElementById("pdfModal"); 
+    const cerrar = document.getElementById("closeModal"); 
+    const visor = document.getElementById("pdfViewerContainer"); 
+    const modalTitle = document.querySelector('#pdfModal .modal-header h2');
+
+    // 2. FUNCIÓN DE RENDERIZADO DEL PDF
+    async function renderPDF(url, titulo) {
+        visor.innerHTML = '<p style="text-align:center; color:#5b4a2e; margin-top: 50px;">Cargando ' + titulo + '...</p>'; 
+        modalTitle.textContent = titulo; // Establece el título gótico del modal
+
+        try {
+            const pdf = await pdfjsLib.getDocument(url).promise;
+            const total = pdf.numPages;
+
+            visor.innerHTML = ''; 
+            
+            // Constantes de alta resolución para mejor visualización
+            const RENDER_SCALE = 3.0; 
+            const VISUAL_WIDTH_FACTOR = 0.9; 
+
+            for (let num = 1; num <= total; num++) {
+                const page = await pdf.getPage(num);
+                
+                const containerWidth = visor.clientWidth - 20; 
+                const scaledViewport = page.getViewport({ scale: RENDER_SCALE });
+
+                const targetVisualWidth = containerWidth * VISUAL_WIDTH_FACTOR;
+                const aspectRatio = scaledViewport.height / scaledViewport.width;
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                
+                // Configuración de resolución alta
+                canvas.height = scaledViewport.height;
+                canvas.width = scaledViewport.width;
+                
+                // Configuración de tamaño visual (CSS)
+                canvas.style.width = targetVisualWidth + 'px';
+                canvas.style.height = (targetVisualWidth * aspectRatio) + 'px';
+                
+                visor.appendChild(canvas);
+                
+                // Renderizado
+                await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+            }
+        } catch (error) {
+            visor.innerHTML = `<p style="text-align:center; color:red; margin-top: 50px;">Error al cargar el PDF: ${titulo}. Asegúrate de que el archivo "${url}" exista.</p>`;
+            console.error("Error al renderizar PDF:", error);
+        }
+    }
+
+    // 3. ARRAY DE BOTONES (9 BOTONES Y NOMBRES DE PDF FINALES)
+    const buttons = [
+        { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
+        { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" }, 
+        { id: "btnExodoJuecesMonarquia", file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
+        { id: "btnProfetas", file: "profetas.pdf", title: "Mensajeros Proféticos" },
+        { id: "btnDivisionReino", file: "division del reino.pdf", title: "División del Reino" },
+        { id: "btnIntertestamentario", file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
+        { id: "btnDinastias", file: "dinastias.pdf", title: "Dinastías Reales" },
+        { id: "btnApostoles", file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
+        { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" } 
+    ];
+    
+    // Asigna el evento de click a cada uno de los 9 botones
+    buttons.forEach(btnInfo => {
+        const buttonElement = document.getElementById(btnInfo.id);
+        if (buttonElement) {
+            buttonElement.addEventListener("click", () => {
+                modal.style.display = "block";
+                setTimeout(() => {
+                    renderPDF(btnInfo.file, btnInfo.title);
+                }, 50); 
+            });
+        }
+    });
+
+
+    // 4. MANEJO DEL MODAL (Cerrar)
+    cerrar.addEventListener("click", () => {
+        modal.style.display = "none";
+        visor.innerHTML = ""; 
+    });
+
+    // Re-renderizar el PDF si el tamaño de la ventana cambia 
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        if (modal.style.display === 'block') {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const currentTitle = modalTitle.textContent;
+                const currentBtn = buttons.find(b => b.title === currentTitle);
+                if (currentBtn) {
+                     renderPDF(currentBtn.file, currentBtn.title);
+                }
+            }, 200); 
+        }
+    });
+});
+</script>
+
+</body>
+</html>
