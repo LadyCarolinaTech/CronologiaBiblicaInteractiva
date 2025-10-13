@@ -4,6 +4,10 @@ Aplicación web para explorar una **Cronología Bíblica Interactiva** con visor
 
 ---
 
+## 🧠 Objetivo del Proyecto
+
+Brindar una herramienta visual e interactiva que facilite la comprensión de la **historia y cronología bíblica**, integrando material de estudio en formato digital accesible desde cualquier dispositivo.
+
 ## 🌟 Descripción del Proyecto
 
 Este proyecto es una aplicación web sencilla, moderna y funcional que permite visualizar documentos en formato **PDF** mediante una interfaz interactiva basada en botones temáticos.  
@@ -44,9 +48,7 @@ Asegúrate de que los archivos estén ubicados en la misma carpeta que el archiv
 
 ---
 
-## 🧠 Objetivo del Proyecto
 
-Brindar una herramienta visual e interactiva que facilite la comprensión de la **historia y cronología bíblica**, integrando material de estudio en formato digital accesible desde cualquier dispositivo.
 
 ---
 
