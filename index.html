@@ -7,11 +7,10 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
 <style>
-/* ===== Estilos base (restaurados) ===== */
+/* ===== Estilos base ===== */
 body {
   background: #f8f4e9 url('https://www.transparenttextures.com/patterns/aged-paper.png');
   font-family: 'Sen', sans-serif;
@@ -51,7 +50,7 @@ body {
   text-align: center;
 }
 
-/* ===== CUADRÍCULA DE BOTONES (3 columnas) ===== */
+/* ===== CUADRÍCULA DE BOTONES ===== */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -61,7 +60,7 @@ body {
   margin: 15px auto 10px auto;
 }
 
-/* Botón (estilo igual para todos) */
+/* Botones */
 button.app-btn {
   background: #f4e9d8;
   border: 2px solid #c9a86a;
@@ -81,8 +80,6 @@ button.app-btn {
   justify-content: center;
   gap: 10px;
 }
-
-/* hover */
 button.app-btn:hover {
   background: #e8d8b0;
   color: #3e2f1c;
@@ -91,32 +88,19 @@ button.app-btn:hover {
   border-color: #d4af37;
 }
 
-/* Botón grande y centrado para "Ver documento completo" - mantiene el mismo look */
-.full-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  padding: 0 10px;
-}
-button.full-btn {
-  max-width: 420px;
-  width: 60%;
-  min-width: 260px;
+/* Clase para centrar el botón "Anexos" en la columna central */
+.center-button {
+  grid-column: 2 / 3;
 }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .button-grid { max-width: 720px; }
-}
+/* Responsive: en pantallas pequeñas quitamos la colocación fija para que no rompa el flujo */
 @media (max-width: 750px) {
   .button-grid { grid-template-columns: repeat(2, 1fr); max-width: 500px; }
-  .full-row { padding: 0 20px; }
-  button.full-btn { width: 70%; }
+  .center-button { grid-column: auto; }
 }
 @media (max-width: 500px) {
   .button-grid { grid-template-columns: 1fr; }
-  button.full-btn { width: 90%; }
+  .center-button { grid-column: auto; }
 }
 
 /* Footer */
@@ -128,7 +112,7 @@ footer {
   margin-top: 10px;
 }
 
-/* ===== Modal (mismo que tenías) ===== */
+/* ===== Modal ===== */
 .modal {
   display: none;
   position: fixed;
@@ -142,7 +126,6 @@ footer {
   background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
   padding-top: 20px;
 }
-
 .modal-content {
   background-color: white;
   margin: 0 auto;
@@ -156,7 +139,6 @@ footer {
   display: flex;
   flex-direction: column;
 }
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -173,7 +155,6 @@ footer {
   text-align: center;
   margin: 0;
 }
-
 .modal-body {
   flex-grow: 1;
   overflow-y: auto;
@@ -182,7 +163,6 @@ footer {
   flex-direction: column;
   align-items: center;
 }
-
 #pdfViewerContainer {
   height: 100%;
   width: 100%;
@@ -197,8 +177,6 @@ footer {
   max-width: 100%;
   height: auto;
 }
-
-/* close */
 .close {
   color: #3e2f1c;
   font-size: 30px;
@@ -223,14 +201,7 @@ footer {
 </header>
 
 <main>
-  <div class="button-grid" id="buttonGrid">
-    <!-- botones creados por JS -->
-  </div>
-
-  <!-- Botón centrado y armonioso para "Ver documento completo" -->
-  <div class="full-row">
-    <button id="btnDocumentoCompleto" class="app-btn full-btn"><span style="font-size:1.2em;">📖</span><span>Ver documento completo</span></button>
-  </div>
+  <div class="button-grid" id="buttonGrid"></div>
 </main>
 
 <footer>
@@ -252,7 +223,6 @@ footer {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // PDF.js worker
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
 
   const modal = document.getElementById("pdfModal");
@@ -261,45 +231,42 @@ document.addEventListener('DOMContentLoaded', function() {
   const modalTitle = document.querySelector('#pdfModal .modal-header h2');
   const buttonGrid = document.getElementById("buttonGrid");
 
-  // Lista de botones (restaurada + nuevos)
+  // Todos los botones incluyendo Anexos (Anexos es el último)
   const buttons = [
     { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
     { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
     { id: "btnExodoJuecesMonarquia", file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
     { id: "btnProfetas", file: "profetas.pdf", title: "Mensajeros Proféticos" },
     { id: "btnDivisionReino", file: "division del reino.pdf", title: "División del Reino" },
-
     { id: "btnPreexilio", file: "preexilio.pdf", title: "Preexilio" },
     { id: "btnExilioCaida", file: "exilio y caída.pdf", title: "Exilio y Caída" },
     { id: "btnPosexilioJuda", file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
-
     { id: "btnIntertestamentario", file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
     { id: "btnDinastias", file: "dinastias.pdf", title: "Dinastías Reales" },
     { id: "btnApostoles", file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
-    { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" }
+    { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" },
+    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos", center: true }
   ];
 
-  // Crear los 12 botones en la cuadrícula
+  // Crear botones dinámicamente
   buttons.forEach(info => {
     const b = document.createElement('button');
     b.id = info.id;
     b.className = 'app-btn';
     b.textContent = info.title;
-    b.addEventListener('click', () => {
-      openModalAndRender(info.file, info.title);
-    });
+
+    // Si es el botón Anexos y viene marcado center: true, le aplicamos la clase para centrar en la columna del medio
+    if (info.center) {
+      b.classList.add('center-button');
+    }
+
+    b.addEventListener('click', () => openModalAndRender(info.file, info.title));
     buttonGrid.appendChild(b);
   });
 
-  // Botón "Ver documento completo" (ya en el HTML)
-  const btnFull = document.getElementById("btnDocumentoCompleto");
-  btnFull.addEventListener('click', () => {
-    openModalAndRender('documento completo.pdf', 'Documento Completo');
-  });
-
-  // Render PDF usando pdf.js (manteniendo la lógica anterior, alta resolución)
+  // Función para mostrar PDF con pdf.js
   async function openModalAndRender(url, titulo) {
-    viewer.innerHTML = '<p style="text-align:center; color:#5b4a2e; margin-top: 50px;">Cargando ' + titulo + '...</p>';
+    viewer.innerHTML = '<p style="text-align:center; color:#5b4a2e; margin-top:50px;">Cargando ' + titulo + '...</p>';
     modalTitle.textContent = titulo;
     modal.style.display = 'block';
 
@@ -319,20 +286,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const aspectRatio = scaledViewport.height / scaledViewport.width;
 
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-
+        const ctx = canvas.getContext('2d');
         canvas.height = scaledViewport.height;
         canvas.width = scaledViewport.width;
-
         canvas.style.width = targetVisualWidth + 'px';
         canvas.style.height = (targetVisualWidth * aspectRatio) + 'px';
 
         viewer.appendChild(canvas);
-
-        await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+        await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
       }
     } catch (err) {
-      viewer.innerHTML = `<p style="text-align:center; color:red; margin-top: 50px;">Error al cargar el PDF: ${titulo}. Asegúrate de que el archivo "${url}" exista.</p>`;
+      viewer.innerHTML = `<p style="text-align:center; color:red; margin-top:50px;">Error al cargar el PDF: ${titulo}. Asegúrate de que el archivo "${url}" exista.</p>`;
       console.error('Error al renderizar PDF:', err);
     }
   }
@@ -343,28 +307,22 @@ document.addEventListener('DOMContentLoaded', function() {
     viewer.innerHTML = '';
   });
 
-  // Cerrar haciendo clic fuera
-  window.addEventListener('click', (e) => {
+  window.addEventListener('click', e => {
     if (e.target === modal) {
       modal.style.display = 'none';
       viewer.innerHTML = '';
     }
   });
 
-  // Re-render al redimensionar si modal abierto (para mantener escala)
+  // Re-render al redimensionar cuando modal abierto
   let resizeTimer;
   window.addEventListener('resize', () => {
     if (modal.style.display === 'block') {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         const title = modalTitle.textContent;
-        // Buscar archivo por título
         const found = buttons.find(b => b.title === title);
-        if (title === 'Documento Completo') {
-          openModalAndRender('documento completo.pdf', 'Documento Completo');
-        } else if (found) {
-          openModalAndRender(found.file, found.title);
-        }
+        if (found) openModalAndRender(found.file, found.title);
       }, 200);
     }
   });
