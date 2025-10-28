@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
     { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
     { id: "btnExodoJuecesMonarquia", file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
-    { id: "btnProfetas", file: "profetas.pdf", title: "Mensajeros Proféticos" },
+    { id: "btnProfetas", file: "profetas.pdf", title: "Profetas" },  // <-- Cambiado aquí
     { id: "btnDivisionReino", file: "division del reino.pdf", title: "División del Reino" },
     { id: "btnPreexilio", file: "preexilio.pdf", title: "Preexilio" },
     { id: "btnExilioCaida", file: "exilio y caída.pdf", title: "Exilio y Caída" },
@@ -255,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
     b.className = 'app-btn';
     b.textContent = info.title;
 
-    // Si es el botón Anexos y viene marcado center: true, le aplicamos la clase para centrar en la columna del medio
     if (info.center) {
       b.classList.add('center-button');
     }
