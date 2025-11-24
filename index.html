@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viwport" content="width=device-width, initial-scale=1.0" /> 
 <title>Cronología Bíblica Interactiva</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
@@ -88,12 +88,12 @@ button.app-btn:hover {
   border-color: #d4af37;
 }
 
-/* Clase para centrar el botón "Anexos" en la columna central */
+/* Clase para centrar Anexos */
 .center-button {
   grid-column: 2 / 3;
 }
 
-/* Responsive: en pantallas pequeñas quitamos la colocación fija para que no rompa el flujo */
+/* Responsive */
 @media (max-width: 750px) {
   .button-grid { grid-template-columns: repeat(2, 1fr); max-width: 500px; }
   .center-button { grid-column: auto; }
@@ -231,12 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const modalTitle = document.querySelector('#pdfModal .modal-header h2');
   const buttonGrid = document.getElementById("buttonGrid");
 
-  // Todos los botones incluyendo Anexos (Anexos es el último)
   const buttons = [
     { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
     { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
     { id: "btnExodoJuecesMonarquia", file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
-    { id: "btnProfetas", file: "profetas.pdf", title: "Profetas" },  // <-- Cambiado aquí
+    { id: "btnProfetas", file: "profetas.pdf", title: "Profetas" },
     { id: "btnDivisionReino", file: "division del reino.pdf", title: "División del Reino" },
     { id: "btnPreexilio", file: "preexilio.pdf", title: "Preexilio" },
     { id: "btnExilioCaida", file: "exilio y caída.pdf", title: "Exilio y Caída" },
@@ -245,7 +244,15 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: "btnDinastias", file: "dinastias.pdf", title: "Dinastías Reales" },
     { id: "btnApostoles", file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
     { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" },
-    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos", center: true }
+
+    /* === AQUÍ ESTÁ TU BOTÓN CAMBIADO === */
+    { id: "btnRepresentaciones", file: "representaciones.pdf", title: "Figuras Proféticas" },
+
+    /* === ANEXOS === */
+    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos", center: true },
+
+    /* === TU BOTÓN NUEVO === */
+    { id: "btnDocumento", file: "documento.pdf", title: "Documento Completo" }
   ];
 
   // Crear botones dinámicamente
@@ -263,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
     buttonGrid.appendChild(b);
   });
 
-  // Función para mostrar PDF con pdf.js
+  // Mostrar PDF
   async function openModalAndRender(url, titulo) {
     viewer.innerHTML = '<p style="text-align:center; color:#5b4a2e; margin-top:50px;">Cargando ' + titulo + '...</p>';
     modalTitle.textContent = titulo;
@@ -306,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
     viewer.innerHTML = '';
   });
 
+  // Cerrar clic fuera
   window.addEventListener('click', e => {
     if (e.target === modal) {
       modal.style.display = 'none';
@@ -313,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Re-render al redimensionar cuando modal abierto
+  // Re-render al redimensionar
   let resizeTimer;
   window.addEventListener('resize', () => {
     if (modal.style.display === 'block') {
