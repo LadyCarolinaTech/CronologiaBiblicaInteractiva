@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viwport" content="width=device-width, initial-scale=1.0" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
 <title>Cronología Bíblica Interactiva</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
@@ -88,19 +88,22 @@ button.app-btn:hover {
   border-color: #d4af37;
 }
 
-/* Clase para centrar Anexos */
-.center-button {
-  grid-column: 2 / 3;
+/* Responsive botones */
+@media (max-width: 600px) {
+  .button-grid {
+    grid-template-columns: 1fr;
+    max-width: 95%;
+  }
 }
-
-/* Responsive */
-@media (max-width: 750px) {
-  .button-grid { grid-template-columns: repeat(2, 1fr); max-width: 500px; }
-  .center-button { grid-column: auto; }
+@media (min-width: 601px) and (max-width: 900px) {
+  .button-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
-@media (max-width: 500px) {
-  .button-grid { grid-template-columns: 1fr; }
-  .center-button { grid-column: auto; }
+@media (min-width: 901px) {
+  .button-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Footer */
@@ -117,15 +120,14 @@ footer {
   display: none;
   position: fixed;
   z-index: 1000;
-  left: 0;
-  top: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: #f8f4e9;
-  background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-  padding-top: 20px;
+  background-color: rgba(0,0,0,0.5);
+  padding-top: 10px;
 }
+
 .modal-content {
   background-color: white;
   margin: 0 auto;
@@ -135,10 +137,25 @@ footer {
   height: 95%;
   max-width: 1000px;
   position: relative;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
+
+/* Modal en CELULAR: ocupa toda la pantalla */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    padding: 0;
+  }
+  #pdfViewerContainer canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -223,7 +240,8 @@ footer {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
 
   const modal = document.getElementById("pdfModal");
   const closeBtn = document.getElementById("closeModal");
@@ -245,13 +263,10 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: "btnApostoles", file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
     { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" },
 
-    /* === AQUÍ ESTÁ TU BOTÓN CAMBIADO === */
     { id: "btnRepresentaciones", file: "representaciones.pdf", title: "Figuras Proféticas" },
 
-    /* === ANEXOS === */
-    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos", center: true },
+    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos" },
 
-    /* === TU BOTÓN NUEVO === */
     { id: "btnDocumento", file: "documento.pdf", title: "Documento Completo" }
   ];
 
@@ -261,11 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
     b.id = info.id;
     b.className = 'app-btn';
     b.textContent = info.title;
-
-    if (info.center) {
-      b.classList.add('center-button');
-    }
-
     b.addEventListener('click', () => openModalAndRender(info.file, info.title));
     buttonGrid.appendChild(b);
   });
@@ -282,28 +292,31 @@ document.addEventListener('DOMContentLoaded', function() {
       viewer.innerHTML = '';
 
       const RENDER_SCALE = 3.0;
-      const VISUAL_WIDTH_FACTOR = 0.9;
 
       for (let num = 1; num <= total; num++) {
         const page = await pdf.getPage(num);
-        const containerWidth = viewer.clientWidth - 20;
-        const scaledViewport = page.getViewport({ scale: RENDER_SCALE });
-        const targetVisualWidth = containerWidth * VISUAL_WIDTH_FACTOR;
-        const aspectRatio = scaledViewport.height / scaledViewport.width;
+
+        const viewport = page.getViewport({ scale: RENDER_SCALE });
 
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.height = scaledViewport.height;
-        canvas.width = scaledViewport.width;
-        canvas.style.width = targetVisualWidth + 'px';
-        canvas.style.height = (targetVisualWidth * aspectRatio) + 'px';
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        canvas.style.width = "100%";
+        canvas.style.height = "auto";
 
         viewer.appendChild(canvas);
-        await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport: viewport
+        }).promise;
       }
     } catch (err) {
-      viewer.innerHTML = `<p style="text-align:center; color:red; margin-top:50px;">Error al cargar el PDF: ${titulo}. Asegúrate de que el archivo "${url}" exista.</p>`;
-      console.error('Error al renderizar PDF:', err);
+      viewer.innerHTML =
+        `<p style="text-align:center; color:red; margin-top:50px;">Error al cargar el PDF: ${titulo}. Revisa que el archivo "${url}" exista.</p>`;
     }
   }
 
@@ -318,19 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.target === modal) {
       modal.style.display = 'none';
       viewer.innerHTML = '';
-    }
-  });
-
-  // Re-render al redimensionar
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    if (modal.style.display === 'block') {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        const title = modalTitle.textContent;
-        const found = buttons.find(b => b.title === title);
-        if (found) openModalAndRender(found.file, found.title);
-      }, 200);
     }
   });
 });
