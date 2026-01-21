@@ -142,17 +142,13 @@ footer {
   overflow: hidden;
 }
 
-/* Modal en CELULAR: ocupa toda la pantalla */
+/* Modal en CELULAR */
 @media (max-width: 600px) {
   .modal-content {
     width: 100%;
     height: 100%;
     border-radius: 0;
     padding: 0;
-  }
-  #pdfViewerContainer canvas {
-    width: 100% !important;
-    height: auto !important;
   }
 }
 
@@ -165,7 +161,7 @@ footer {
   margin-bottom: 10px;
 }
 .modal-header h2 {
-  font-family: 'UnifrakturCook', cursive;
+  font-family: 'UnifrakturCook', cursive; /* Fuente gótica */
   color: #4a3728;
   font-size: 2em;
   flex-grow: 1;
@@ -225,7 +221,6 @@ footer {
   <strong>© 2025 Cronología Bíblica Interactiva — Inspirado en las Sagradas Escrituras</strong>
 </footer>
 
-<!-- Modal -->
 <div id="pdfModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -249,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const modalTitle = document.querySelector('#pdfModal .modal-header h2');
   const buttonGrid = document.getElementById("buttonGrid");
 
+  // Lista organizada con los cambios solicitados
   const buttons = [
     { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
     { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
@@ -262,12 +258,11 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: "btnDinastias", file: "dinastias.pdf", title: "Dinastías Reales" },
     { id: "btnApostoles", file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
     { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" },
-
-    { id: "btnRepresentaciones", file: "representaciones.pdf", title: "Figuras Proféticas" },
-
-    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos" },
-
-    { id: "btnDocumento", file: "documento.pdf", title: "Documento Completo" }
+    // Nuevos botones de Figuras Proféticas
+    { id: "btnRepresentacionesAL", file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
+    { id: "btnRepresentacionesMZ", file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
+    // Anexos al final
+    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos" }
   ];
 
   // Crear botones dinámicamente
@@ -283,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Mostrar PDF
   async function openModalAndRender(url, titulo) {
     viewer.innerHTML = '<p style="text-align:center; color:#5b4a2e; margin-top:50px;">Cargando ' + titulo + '...</p>';
-    modalTitle.textContent = titulo;
+    modalTitle.textContent = titulo; // El título gótico se asigna aquí
     modal.style.display = 'block';
 
     try {
@@ -291,19 +286,16 @@ document.addEventListener('DOMContentLoaded', function() {
       const total = pdf.numPages;
       viewer.innerHTML = '';
 
-      const RENDER_SCALE = 3.0;
+      const RENDER_SCALE = 2.0; 
 
       for (let num = 1; num <= total; num++) {
         const page = await pdf.getPage(num);
-
         const viewport = page.getViewport({ scale: RENDER_SCALE });
-
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
         canvas.height = viewport.height;
         canvas.width = viewport.width;
-
         canvas.style.width = "100%";
         canvas.style.height = "auto";
 
