@@ -48,10 +48,10 @@ body {
   text-align: center;
 }
 
-/* ===== CUADRÍCULA DE BOTONES ===== */
+/* ===== CUADRÍCULA DE BOTONES (4x4 en PC) ===== */
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas exactas */
   gap: 15px;
   padding: 10px 20px 15px;
   max-width: 1100px;
@@ -73,8 +73,9 @@ button.app-btn {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Centra contenido horizontalmente */
+  justify-content: center; /* Centra contenido verticalmente */
+  text-align: center; /* Centra el texto */
   min-height: 85px;
 }
 button.app-btn:hover {
@@ -84,6 +85,7 @@ button.app-btn:hover {
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
+/* Responsive */
 @media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 700px) { .button-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
@@ -108,7 +110,7 @@ footer {
 }
 
 .modal-content {
-  background-color: #ffffff;
+  background-color: #ffffff; /* FONDO BLANCO */
   margin: 1vh auto;
   padding: 0;
   border-radius: 12px;
@@ -122,20 +124,19 @@ footer {
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
-/* AJUSTE: Título centrado y espacio para el botón cerrar */
 .modal-header {
   display: grid;
-  grid-template-columns: 50px 1fr 50px; /* Crea espacio equilibrado a los lados */
+  grid-template-columns: 50px 1fr 50px; /* Layout para centrado perfecto */
   align-items: center;
   background: #f4e9d8;
-  padding: 12px 10px;
+  padding: 12px 15px;
   border-bottom: 2px solid #c9a86a;
 }
 .modal-header h2 {
-  grid-column: 2; /* Fuerza al título al centro */
+  grid-column: 2; /* El título ocupa la columna central */
   font-family: 'UnifrakturCook', cursive;
   color: #4a3728;
-  font-size: 1.5em;
+  font-size: 1.6em;
   margin: 0;
   text-align: center;
 }
@@ -159,12 +160,12 @@ footer {
   background-color: white;
 }
 .close {
-  grid-column: 3; /* Botón a la derecha */
+  grid-column: 3;
   color: #3e2f1c;
   font-size: 35px;
   font-weight: bold;
   cursor: pointer;
-  text-align: center;
+  text-align: right;
 }
 .close:hover { color: #d4af37; }
 </style>
@@ -236,17 +237,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   async function openModalAndRender(url, titulo, subtitulo) {
-    modalTitle.innerHTML = subtitulo ? `${titulo}<br><span style="font-size: 0.7em; opacity: 0.9;">${subtitulo}</span>` : titulo;
-    viewer.innerHTML = '<p style="text-align:center; padding-top:50px; color: #4a3728;">Abriendo documento...</p>';
+    modalTitle.innerHTML = subtitulo ? `${titulo}<br><span style="font-size:0.7em;">${subtitulo}</span>` : titulo;
+    viewer.innerHTML = '<p style="text-align:center; padding-top:50px; color: #4a3728;">Preparando documento en alta resolución...</p>';
     modal.style.display = 'block';
 
     try {
       const pdf = await pdfjsLib.getDocument(url).promise;
       viewer.innerHTML = '';
       
-      // --- IMPLEMENTACIÓN DE RESOLUCIÓN INTELIGENTE ---
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const scale = isMobile ? 2.0 : 2.5; // Móvil: 2.0 | PC: 2.5
+      
+      // CONFIGURACIÓN DE NITIDEZ ADAPTATIVA
+      const scale = isMobile ? 2.0 : 3.0; 
 
       for (let num = 1; num <= pdf.numPages; num++) {
         const page = await pdf.getPage(num);
@@ -257,13 +259,14 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.height = viewport.height;
         canvas.width = viewport.width;
         
+        // Ajuste visual del canvas
         canvas.style.width = isMobile ? "98%" : "auto"; 
         
         viewer.appendChild(canvas);
         await page.render({ canvasContext: context, viewport: viewport }).promise;
       }
     } catch (err) {
-      viewer.innerHTML = `<p style="color:red; padding: 30px;">Error al cargar archivo.</p>`;
+      viewer.innerHTML = `<p style="color:red; padding: 30px;">Error al cargar: ${url}</p>`;
     }
   }
 
