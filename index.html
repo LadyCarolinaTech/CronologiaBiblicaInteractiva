@@ -48,7 +48,7 @@ body {
   text-align: center;
 }
 
-/* ===== CUADRÍCULA DE BOTONES (4x4 en PC) ===== */
+/* ===== CUADRÍCULA DE BOTONES ===== */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -84,7 +84,6 @@ button.app-btn:hover {
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Adaptabilidad para dispositivos */
 @media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 700px) { .button-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
@@ -109,7 +108,7 @@ footer {
 }
 
 .modal-content {
-  background-color: #ffffff; /* FONDO BLANCO */
+  background-color: #ffffff;
   margin: 1vh auto;
   padding: 0;
   border-radius: 12px;
@@ -123,24 +122,27 @@ footer {
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
+/* AJUSTE: Título centrado y espacio para el botón cerrar */
 .modal-header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 50px 1fr 50px; /* Crea espacio equilibrado a los lados */
   align-items: center;
   background: #f4e9d8;
-  padding: 12px 25px;
+  padding: 12px 10px;
   border-bottom: 2px solid #c9a86a;
 }
 .modal-header h2 {
+  grid-column: 2; /* Fuerza al título al centro */
   font-family: 'UnifrakturCook', cursive;
   color: #4a3728;
   font-size: 1.5em;
   margin: 0;
+  text-align: center;
 }
 .modal-body {
   flex-grow: 1;
   overflow-y: auto;
-  background-color: #ffffff; /* CUERPO BLANCO */
+  background-color: #ffffff;
   padding: 15px 0;
 }
 #pdfViewerContainer {
@@ -151,16 +153,18 @@ footer {
 }
 #pdfViewerContainer canvas {
   margin-bottom: 25px;
-  max-width: 95%; /* Evita que el PDF toque los bordes del modal */
+  max-width: 95%;
   height: auto !important;
   box-shadow: 0 5px 20px rgba(0,0,0,0.1);
   background-color: white;
 }
 .close {
+  grid-column: 3; /* Botón a la derecha */
   color: #3e2f1c;
   font-size: 35px;
   font-weight: bold;
   cursor: pointer;
+  text-align: center;
 }
 .close:hover { color: #d4af37; }
 </style>
@@ -185,7 +189,7 @@ footer {
 <div id="pdfModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2 id="modalTitleText"></h2>
+      <div></div> <h2 id="modalTitleText"></h2>
       <span class="close" id="closeModal">&times;</span>
     </div>
     <div class="modal-body">
@@ -205,9 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const buttonGrid = document.getElementById("buttonGrid");
 
   const buttons = [
-    // Primer botón: Dedicatoria
     { id: "btnDedicatoria", file: "dedicatoria.pdf", title: "Dedicatoria" },
-    
     { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
     { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
     { id: "btnExodoJuecesMonarquia", file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
@@ -234,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   async function openModalAndRender(url, titulo, subtitulo) {
-    modalTitle.innerHTML = subtitulo ? `${titulo} <small style="font-size:0.7em;">${subtitulo}</small>` : titulo;
+    modalTitle.innerHTML = subtitulo ? `${titulo}<br><span style="font-size: 0.7em; opacity: 0.9;">${subtitulo}</span>` : titulo;
     viewer.innerHTML = '<p style="text-align:center; padding-top:50px; color: #4a3728;">Abriendo documento...</p>';
     modal.style.display = 'block';
 
@@ -242,10 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const pdf = await pdfjsLib.getDocument(url).promise;
       viewer.innerHTML = '';
       
-      // LOGICA DE NITIDEZ: 
-      // Si es móvil usamos 1.5 (ligero). Si es PC usamos 2.2 (muy nítido).
+      // --- IMPLEMENTACIÓN DE RESOLUCIÓN INTELIGENTE ---
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const scale = isMobile ? 1.5 : 2.2; 
+      const scale = isMobile ? 2.0 : 2.5; // Móvil: 2.0 | PC: 2.5
 
       for (let num = 1; num <= pdf.numPages; num++) {
         const page = await pdf.getPage(num);
@@ -256,14 +257,13 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.height = viewport.height;
         canvas.width = viewport.width;
         
-        // El canvas se ajusta al ancho del modal de forma estética
         canvas.style.width = isMobile ? "98%" : "auto"; 
         
         viewer.appendChild(canvas);
         await page.render({ canvasContext: context, viewport: viewport }).promise;
       }
     } catch (err) {
-      viewer.innerHTML = `<p style="color:red; padding: 30px;">Error: No se pudo cargar el archivo "${url}". Verifique que el nombre sea correcto.</p>`;
+      viewer.innerHTML = `<p style="color:red; padding: 30px;">Error al cargar archivo.</p>`;
     }
   }
 
