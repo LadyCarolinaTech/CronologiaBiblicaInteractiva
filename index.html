@@ -20,29 +20,31 @@ body {
   padding: 0;
 }
 
+/* ===== NUEVA CABECERA (Título arriba) ===== */
+header {
+  padding: 40px 20px 20px 20px;
+  background-color: rgba(244, 233, 216, 0.5); /* Un tono suave que combina con el papel */
+  border-bottom: 1px solid #c9a86a;
+  margin-bottom: 30px;
+}
+
 .titulo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-family: 'UnifrakturCook', cursive;
-  font-size: 2.4em;
-  line-height: 1.2em;
+  font-size: 3em; /* Tamaño grande y elegante */
   color: #4a3728;
   text-shadow: 1px 1px 2px rgba(255,255,255,0.3), -1px -1px 2px rgba(0,0,0,0.5);
-  width: 80%;
   margin: 0;
-  text-align: center;
+  display: block;
 }
 
 /* ===== CUADRÍCULA DE BOTONES (4x4 en PC) ===== */
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas exactas */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 15px;
-  padding: 10px 20px 15px;
+  padding: 10px 20px 40px;
   max-width: 1100px;
-  margin: 15px auto 10px auto;
+  margin: 0 auto;
 }
 
 button.app-btn {
@@ -60,11 +62,12 @@ button.app-btn {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra contenido horizontalmente */
-  justify-content: center; /* Centra contenido verticalmente */
-  text-align: center; /* Centra el texto */
+  align-items: center; 
+  justify-content: center; 
+  text-align: center; 
   min-height: 85px;
 }
+
 button.app-btn:hover {
   background: #e8d8b0;
   transform: scale(1.03);
@@ -72,27 +75,36 @@ button.app-btn:hover {
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Responsive */
-@media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px) { .button-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
+/* Responsive para el título y la cuadrícula */
+@media (max-width: 900px) { 
+    .button-grid { grid-template-columns: repeat(3, 1fr); } 
+    .titulo { font-size: 2.5em; }
+}
+@media (max-width: 700px) { 
+    .button-grid { grid-template-columns: repeat(2, 1fr); } 
+    .titulo { font-size: 2em; }
+}
+@media (max-width: 480px) { 
+    .button-grid { grid-template-columns: 1fr; } 
+}
 
+/* ===== FOOTER ESTILO BUSINESS TECH ===== */
 footer {
     background: #f2e8d5;
     color: #5b4a2e;
-    padding: 25px 15px; /* Aumentamos el padding para las dos líneas */
+    padding: 25px 15px;
     font-size: 0.9em;
-    margin-top: 10px;
+    margin-top: 40px;
     border-top: 1px solid #c9a86a;
-    text-align: center; /* ¡Muy importante para centrar las dos líneas! */
-    line-height: 1.6;    /* Esto le da un espacio elegante entre las líneas */
+    text-align: center;
+    line-height: 1.6;
 }
 
 footer strong {
-    display: block;      /* Asegura que el nombre siempre baje a la siguiente línea */
-    margin-top: 5px;    /* Espacio extra sobre tu nombre */
+    display: block;
+    margin-top: 5px;
     font-weight: bold;
-    color: #3e2723;      /* Un tono un poquito más oscuro para que tu nombre destaque */
+    color: #3e2723;
 }
 
 /* ===== Modal con Fondo Blanco Puro ===== */
@@ -106,7 +118,7 @@ footer strong {
 }
 
 .modal-content {
-  background-color: #ffffff; /* FONDO BLANCO */
+  background-color: #ffffff; 
   margin: 1vh auto;
   padding: 0;
   border-radius: 12px;
@@ -122,14 +134,14 @@ footer strong {
 
 .modal-header {
   display: grid;
-  grid-template-columns: 50px 1fr 50px; /* Layout para centrado perfecto */
+  grid-template-columns: 50px 1fr 50px; 
   align-items: center;
   background: #f4e9d8;
   padding: 12px 15px;
   border-bottom: 2px solid #c9a86a;
 }
 .modal-header h2 {
-  grid-column: 2; /* El título ocupa la columna central */
+  grid-column: 2; 
   font-family: 'UnifrakturCook', cursive;
   color: #4a3728;
   font-size: 1.6em;
@@ -169,7 +181,7 @@ footer strong {
 <body>
 
 <header>
-    <h1 class="titulo">Cronología Bíblica</h1>
+    <h1 class="titulo">Cronología Bíblica Interactiva</h1>
 </header>
 
 <main>
@@ -177,7 +189,7 @@ footer strong {
 </main>
 
 <footer>
-  <strong>© 2026 Cronología Bíblica inspirada en las Sagradas Escrituras</strong>
+  © 2026 Cronología Bíblica — Inspirada en las Sagradas Escrituras
   <br>
   <strong>Lady Carolina Muñoz Sierra</strong>
 </footer>
@@ -239,10 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const pdf = await pdfjsLib.getDocument(url).promise;
       viewer.innerHTML = '';
-      
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      
-      // CONFIGURACIÓN DE NITIDEZ ADAPTATIVA
       const scale = isMobile ? 2.0 : 3.0; 
 
       for (let num = 1; num <= pdf.numPages; num++) {
@@ -253,8 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         canvas.height = viewport.height;
         canvas.width = viewport.width;
-        
-        // Ajuste visual del canvas
         canvas.style.width = isMobile ? "98%" : "auto"; 
         
         viewer.appendChild(canvas);
@@ -271,9 +278,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
-
-
-
-
-
