@@ -91,12 +91,21 @@ button.app-btn:hover {
 @media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
 
 footer {
-  background: #f2e8d5;
-  color: #5b4a2e;
-  padding: 15px;
-  font-size: 0.9em;
-  margin-top: 10px;
-  border-top: 1px solid #c9a86a;
+    background: #f2e8d5;
+    color: #5b4a2e;
+    padding: 25px 15px; /* Aumentamos el padding para las dos líneas */
+    font-size: 0.9em;
+    margin-top: 10px;
+    border-top: 1px solid #c9a86a;
+    text-align: center; /* ¡Muy importante para centrar las dos líneas! */
+    line-height: 1.6;    /* Esto le da un espacio elegante entre las líneas */
+}
+
+footer strong {
+    display: block;      /* Asegura que el nombre siempre baje a la siguiente línea */
+    margin-top: 5px;    /* Espacio extra sobre tu nombre */
+    font-weight: bold;
+    color: #3e2723;      /* Un tono un poquito más oscuro para que tu nombre destaque */
 }
 
 /* ===== Modal con Fondo Blanco Puro ===== */
@@ -278,5 +287,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
 
 
