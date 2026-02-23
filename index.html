@@ -20,14 +20,12 @@ body {
   padding: 0;
 }
 
-/* ===== CABECERA CORREGIDA (Simetría total) ===== */
+/* ===== CABECERA CORREGIDA ===== */
 header {
-  /* Padding superior reducido a la mitad (azul) y el inferior ajustado a 15px (verde) */
   padding: 20px 20px 15px 20px; 
   background-color: rgba(244, 233, 216, 0.4);
   border-bottom: 2px solid #c9a86a;
-  /* Margen verde igual al espacio entre botones (15px) */
-  margin-bottom: 15px; 
+  margin-bottom: 15px; /* Espacio igual al gap entre botones */
 }
 
 .titulo-principal {
@@ -42,15 +40,15 @@ header {
 .button-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 15px; /* Distancia constante marcada con lápiz negro */
+  gap: 15px; /* Espacio marcado con lápiz negro */
   padding: 0 20px; 
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* ===== ESPACIO ROJO ENTRE BOTONES Y FOOTER ===== */
+/* ===== ÁREA ROJA CORREGIDA (Igual al lápiz negro) ===== */
 main {
-  margin-bottom: 15px; /* Distancia roja ajustada a 15px */
+  margin-bottom: 15px; /* Espacio reducido exactamente a 15px */
 }
 
 button.app-btn {
@@ -78,11 +76,10 @@ button.app-btn:hover {
   border-color: #d4af37;
 }
 
-/* ===== FOOTER DELGADO (Altura azul reducida a verde) ===== */
+/* ===== FOOTER DELGADO ===== */
 footer {
   background: #f2e8d5;
   color: #5b4a2e;
-  /* Padding reducido para lograr la altura verde */
   padding: 10px 15px; 
   font-size: 0.85em;
   border-top: 1px solid #c9a86a;
@@ -205,5 +202,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
-
