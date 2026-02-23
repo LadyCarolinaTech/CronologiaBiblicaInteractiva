@@ -20,38 +20,44 @@ body {
   padding: 0;
 }
 
-/* ===== CABECERA CORREGIDA ===== */
+/* ===== CABECERA CORREGIDA (Simetría total) ===== */
 header {
-  padding: 50px 20px;
+  /* Padding superior reducido a la mitad (azul) y el inferior ajustado a 15px (verde) */
+  padding: 20px 20px 15px 20px; 
   background-color: rgba(244, 233, 216, 0.4);
   border-bottom: 2px solid #c9a86a;
-  margin-bottom: 40px; /* Esto separa el título de los botones */
+  /* Margen verde igual al espacio entre botones (15px) */
+  margin-bottom: 15px; 
 }
 
 .titulo-principal {
   font-family: 'UnifrakturCook', cursive;
-  font-size: 3.5em;
+  font-size: 3.2em;
   color: #4a3728;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
   margin: 0;
-  display: block; /* Asegura que ocupe su propio espacio */
 }
 
 /* ===== CUADRÍCULA DE BOTONES ===== */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 15px;
-  padding: 10px 20px 40px;
+  gap: 15px; /* Distancia constante marcada con lápiz negro */
+  padding: 0 20px; 
   max-width: 1100px;
   margin: 0 auto;
+}
+
+/* ===== ESPACIO ROJO ENTRE BOTONES Y FOOTER ===== */
+main {
+  margin-bottom: 15px; /* Distancia roja ajustada a 15px */
 }
 
 button.app-btn {
   background: #f4e9d8;
   border: 2px solid #c9a86a;
   border-radius: 14px;
-  padding: 15px 10px;
+  padding: 12px 10px;
   font-size: 0.95em;
   color: #4a3728;
   cursor: pointer;
@@ -59,7 +65,7 @@ button.app-btn {
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  min-height: 85px;
+  min-height: 80px;
   display: flex;
   flex-direction: column;
   align-items: center; 
@@ -68,42 +74,33 @@ button.app-btn {
 
 button.app-btn:hover {
   background: #e8d8b0;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: #d4af37;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Responsive */
-@media (max-width: 900px) { 
-  .button-grid { grid-template-columns: repeat(3, 1fr); } 
-  .titulo-principal { font-size: 2.8em; }
-}
-@media (max-width: 700px) { 
-  .button-grid { grid-template-columns: repeat(2, 1fr); } 
-  .titulo-principal { font-size: 2.2em; }
-}
-@media (max-width: 480px) { 
-  .button-grid { grid-template-columns: 1fr; } 
-}
-
-/* ===== FOOTER ===== */
+/* ===== FOOTER DELGADO (Altura azul reducida a verde) ===== */
 footer {
-    background: #f2e8d5;
-    color: #5b4a2e;
-    padding: 25px 15px;
-    font-size: 0.9em;
-    margin-top: 20px;
-    border-top: 1px solid #c9a86a;
-    line-height: 1.6;
+  background: #f2e8d5;
+  color: #5b4a2e;
+  /* Padding reducido para lograr la altura verde */
+  padding: 10px 15px; 
+  font-size: 0.85em;
+  border-top: 1px solid #c9a86a;
+  line-height: 1.4;
 }
 
 footer strong {
-    display: block;
-    margin-top: 5px;
-    color: #3e2723;
+  display: block;
+  margin-top: 2px;
+  color: #3e2723;
 }
 
-/* ===== Modales (Sin cambios) ===== */
+/* Responsive */
+@media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .button-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
+
+/* Modales */
 .modal { display: none; position: fixed; z-index: 1000; inset: 0; background-color: rgba(0,0,0,0.75); backdrop-filter: blur(4px); }
 .modal-content { background-color: #ffffff; margin: 1vh auto; border-radius: 12px; width: 95%; height: 97vh; max-width: 1200px; display: flex; flex-direction: column; overflow: hidden; }
 .modal-header { display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; background: #f4e9d8; padding: 12px 15px; border-bottom: 2px solid #c9a86a; }
@@ -126,7 +123,6 @@ footer strong {
 
 <footer>
   © 2026 Cronología Bíblica — Inspirada en las Sagradas Escrituras
-  <br>
   <strong>Lady Carolina Muñoz Sierra</strong>
 </footer>
 
@@ -188,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const pdf = await pdfjsLib.getDocument(url).promise;
       viewer.innerHTML = '';
       const scale = 2.0; 
-
       for (let num = 1; num <= pdf.numPages; num++) {
         const page = await pdf.getPage(num);
         const viewport = page.getViewport({ scale: scale });
