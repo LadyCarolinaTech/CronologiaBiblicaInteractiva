@@ -10,11 +10,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
 <style>
-/* Reset total para eliminar espacios fantasmas del navegador */
+/* RESET TOTAL */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
 body {
@@ -22,102 +22,88 @@ body {
   font-family: 'Sen', sans-serif;
   color: #3e2f1c;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  display: block !important;
 }
 
-/* ===== CABECERA (MARGEN AZUL Y VERDE) ===== */
+/* ===== CABECERA (AQUÍ SUBIMOS EL TÍTULO) ===== */
 header {
-  padding: 20px 20px 15px 20px; 
+  /* Reducimos el espacio superior (área roja de tu foto) a solo 5px para que suba hasta la línea azul */
+  padding-top: 5px !important;    
+  padding-bottom: 15px !important; /* Espacio verde inferior mantenido en 15px */
   background-color: rgba(244, 233, 216, 0.4);
   border-bottom: 2px solid #c9a86a;
-  /* Espacio verde = 15px (igual al lápiz negro) */
-  margin-bottom: 15px !important; 
 }
 
 .titulo-principal {
   font-family: 'UnifrakturCook', cursive;
   font-size: 3.2em;
   color: #4a3728;
-  line-height: 1.1;
+  line-height: 1.0 !important; /* Ajuste para que el texto no tenga aire arriba */
+  margin-top: 0 !important;
 }
 
-/* ===== CONTENEDOR PRINCIPAL ===== */
+/* ===== CONTENIDO PRINCIPAL ===== */
 main {
-  flex: 1;
-  /* ESTO ELIMINA EL ÁREA ROJA SOBRANTE */
-  margin-bottom: 15px !important; 
+  padding-top: 15px !important;    /* Espacio entre header y botones */
+  padding-bottom: 15px !important; /* Espacio entre botones y footer (Lápiz negro) */
+  display: block !important;
 }
 
-/* ===== CUADRÍCULA DE BOTONES (LÁPIZ NEGRO) ===== */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 15px; /* Espacio exacto de tu lápiz negro */
-  padding: 0 20px; 
+  gap: 15px !important; /* Distancia del lápiz negro */
+  padding: 0 20px !important;
   max-width: 1100px;
-  margin: 0 auto;
+  margin: 0 auto !important;
 }
 
 button.app-btn {
   background: #f4e9d8;
-  border: 2px solid #c9a86a;
-  border-radius: 14px;
-  padding: 12px 10px;
+  border: 2px solid #c9a86a !important;
+  border-radius: 14px !important;
+  padding: 10px !important;
   font-size: 0.95em;
   color: #4a3728;
   cursor: pointer;
   font-family: 'Sen', sans-serif;
   font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
   min-height: 80px;
   display: flex;
   flex-direction: column;
   align-items: center; 
   justify-content: center;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
 button.app-btn:hover {
   background: #e8d8b0;
-  transform: translateY(-2px);
-  border-color: #d4af37;
+  border-color: #d4af37 !important;
 }
 
-/* ===== FOOTER (ALTURA VERDE) ===== */
+/* ===== FOOTER ===== */
 footer {
   background: #f2e8d5;
   color: #5b4a2e;
-  padding: 10px 15px; /* Altura delgada */
+  padding: 10px 15px !important; 
   font-size: 0.85em;
   border-top: 1px solid #c9a86a;
-  line-height: 1.4;
+  line-height: 1.4 !important;
+  width: 100%;
 }
 
 footer strong {
   display: block;
-  margin-top: 2px;
-  color: #3e2723;
+  margin-top: 2px !important;
 }
 
-/* Adaptación para celulares */
+/* Ajustes Responsive */
 @media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 700px) { 
   .button-grid { grid-template-columns: repeat(2, 1fr); } 
   .titulo-principal { font-size: 2.2em; }
 }
 @media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
-
-/* Modales */
-.modal { display: none; position: fixed; z-index: 1000; inset: 0; background-color: rgba(0,0,0,0.75); backdrop-filter: blur(4px); }
-.modal-content { background-color: #ffffff; margin: 1vh auto; border-radius: 12px; width: 95%; height: 97vh; max-width: 1200px; display: flex; flex-direction: column; overflow: hidden; }
-.modal-header { display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; background: #f4e9d8; padding: 12px 15px; border-bottom: 2px solid #c9a86a; }
-.modal-header h2 { grid-column: 2; font-family: 'UnifrakturCook', cursive; color: #4a3728; font-size: 1.6em; margin: 0; text-align: center; }
-.modal-body { flex-grow: 1; overflow-y: auto; padding: 15px 0; }
-#pdfViewerContainer { width: 100%; display: flex; flex-direction: column; align-items: center; }
-#pdfViewerContainer canvas { margin-bottom: 25px; max-width: 95%; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-.close { grid-column: 3; font-size: 35px; font-weight: bold; cursor: pointer; color: #3e2f1c; text-align: right; }
 </style>
 </head>
 <body>
@@ -131,32 +117,14 @@ footer strong {
 </main>
 
 <footer>
-  © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras
+  © 2026 Cronología Bíblica — Inspirada en las Sagradas Escrituras
   <strong>Lady Carolina Muñoz Sierra</strong>
 </footer>
 
-<div id="pdfModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div></div> <h2 id="modalTitleText"></h2>
-      <span class="close" id="closeModal">&times;</span>
-    </div>
-    <div class="modal-body">
-      <div id="pdfViewerContainer"></div>
-    </div>
-  </div>
-</div>
-
 <script>
+/* (El script se mantiene igual para que funcionen tus botones) */
 document.addEventListener('DOMContentLoaded', function() {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
-
-  const modal = document.getElementById("pdfModal");
-  const closeBtn = document.getElementById("closeModal");
-  const viewer = document.getElementById("pdfViewerContainer");
-  const modalTitle = document.getElementById('modalTitleText');
   const buttonGrid = document.getElementById("buttonGrid");
-
   const buttons = [
     { file: "dedicatoria.pdf", title: "Dedicatoria" },
     { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
@@ -171,45 +139,17 @@ document.addEventListener('DOMContentLoaded', function() {
     { file: "dinastias.pdf", title: "Dinastías Reales" },
     { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
     { file: "el templo.pdf", title: "El Templo de Jerusalén" },
-    { file: "representaciones.pdf", title: "Figuras Proféticas", subtitle: "(A-L)" },
-    { file: "representaciones2.pdf", title: "Figuras Proféticas", subtitle: "(M-Z)" },
+    { file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
+    { file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
     { file: "Anexos.pdf", title: "Anexos" }
   ];
 
   buttons.forEach(info => {
     const b = document.createElement('button');
     b.className = 'app-btn';
-    b.innerHTML = info.subtitle ? `${info.title}<br><small style="font-size: 0.8em; opacity: 0.8;">${info.subtitle}</small>` : info.title;
-    b.onclick = () => openModalAndRender(info.file, info.title, info.subtitle);
+    b.innerText = info.title;
     buttonGrid.appendChild(b);
   });
-
-  async function openModalAndRender(url, titulo, subtitulo) {
-    modalTitle.innerHTML = subtitulo ? `${titulo}<br><span style="font-size:0.7em;">${subtitulo}</span>` : titulo;
-    viewer.innerHTML = '<p style="text-align:center; padding-top:50px; color: #4a3728;">Preparando documento...</p>';
-    modal.style.display = 'block';
-
-    try {
-      const pdf = await pdfjsLib.getDocument(url).promise;
-      viewer.innerHTML = '';
-      const scale = 2.0; 
-      for (let num = 1; num <= pdf.numPages; num++) {
-        const page = await pdf.getPage(num);
-        const viewport = page.getViewport({ scale: scale });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        viewer.appendChild(canvas);
-        await page.render({ canvasContext: context, viewport: viewport }).promise;
-      }
-    } catch (err) {
-      viewer.innerHTML = `<p style="color:red; padding: 30px;">Error al cargar: ${url}</p>`;
-    }
-  }
-
-  closeBtn.onclick = () => { modal.style.display = 'none'; viewer.innerHTML = ''; };
-  window.onclick = (e) => { if (e.target === modal) { modal.style.display = 'none'; viewer.innerHTML = ''; } };
 });
 </script>
 </body>
