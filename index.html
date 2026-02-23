@@ -10,47 +10,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
 <style>
-/* ===== Estilos base ===== */
+/* Reset total para eliminar espacios fantasmas del navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background: #f8f4e9 url('https://www.transparenttextures.com/patterns/aged-paper.png');
   font-family: 'Sen', sans-serif;
   color: #3e2f1c;
   text-align: center;
-  margin: 0;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* ===== CABECERA CORREGIDA ===== */
+/* ===== CABECERA (MARGEN AZUL Y VERDE) ===== */
 header {
   padding: 20px 20px 15px 20px; 
   background-color: rgba(244, 233, 216, 0.4);
   border-bottom: 2px solid #c9a86a;
-  margin-bottom: 15px; /* Espacio igual al lápiz negro */
+  /* Espacio verde = 15px (igual al lápiz negro) */
+  margin-bottom: 15px !important; 
 }
 
 .titulo-principal {
   font-family: 'UnifrakturCook', cursive;
   font-size: 3.2em;
   color: #4a3728;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-  margin: 0;
+  line-height: 1.1;
 }
 
-/* ===== CUADRÍCULA DE BOTONES ===== */
+/* ===== CONTENEDOR PRINCIPAL ===== */
+main {
+  flex: 1;
+  /* ESTO ELIMINA EL ÁREA ROJA SOBRANTE */
+  margin-bottom: 15px !important; 
+}
+
+/* ===== CUADRÍCULA DE BOTONES (LÁPIZ NEGRO) ===== */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 15px; /* DISTANCIA LÁPIZ NEGRO */
+  gap: 15px; /* Espacio exacto de tu lápiz negro */
   padding: 0 20px; 
   max-width: 1100px;
   margin: 0 auto;
-}
-
-/* ===== ÁREA ROJA (CORRECCIÓN DEFINITIVA) ===== */
-main {
-  /* Forzamos que el espacio final sea idéntico al lápiz negro */
-  margin-bottom: 15px !important; 
-  padding-bottom: 0;
 }
 
 button.app-btn {
@@ -63,7 +70,7 @@ button.app-btn {
   cursor: pointer;
   font-family: 'Sen', sans-serif;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 3px 6px rgba(0,0,0,0.1);
   min-height: 80px;
   display: flex;
@@ -78,15 +85,14 @@ button.app-btn:hover {
   border-color: #d4af37;
 }
 
-/* ===== FOOTER DELGADO ===== */
+/* ===== FOOTER (ALTURA VERDE) ===== */
 footer {
   background: #f2e8d5;
   color: #5b4a2e;
-  padding: 10px 15px; /* Altura reducida (verde) */
+  padding: 10px 15px; /* Altura delgada */
   font-size: 0.85em;
   border-top: 1px solid #c9a86a;
   line-height: 1.4;
-  margin: 0; /* Asegura que no haya saltos extra */
 }
 
 footer strong {
@@ -95,9 +101,12 @@ footer strong {
   color: #3e2723;
 }
 
-/* Responsive */
+/* Adaptación para celulares */
 @media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px) { .button-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) { 
+  .button-grid { grid-template-columns: repeat(2, 1fr); } 
+  .titulo-principal { font-size: 2.2em; }
+}
 @media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
 
 /* Modales */
@@ -149,22 +158,22 @@ document.addEventListener('DOMContentLoaded', function() {
   const buttonGrid = document.getElementById("buttonGrid");
 
   const buttons = [
-    { id: "btnDedicatoria", file: "dedicatoria.pdf", title: "Dedicatoria" },
-    { id: "btnGenealogias", file: "genealogias.pdf", title: "Genealogías Bíblicas" },
-    { id: "btnPatriarcas", file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
-    { id: "btnExodoJuecesMonarquia", file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
-    { id: "btnProfetas", file: "profetas.pdf", title: "Profetas" },
-    { id: "btnDivisionReino", file: "division del reino.pdf", title: "División del Reino" },
-    { id: "btnPreexilio", file: "preexilio.pdf", title: "Preexilio" },
-    { id: "btnExilioCaida", file: "exilio y caída.pdf", title: "Exilio y Caída" },
-    { id: "btnPosexilioJuda", file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
-    { id: "btnIntertestamentario", file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
-    { id: "btnDinastias", file: "dinastias.pdf", title: "Dinastías Reales" },
-    { id: "btnApostoles", file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
-    { id: "btnTemplo", file: "el templo.pdf", title: "El Templo de Jerusalén" },
-    { id: "btnRepresentacionesAL", file: "representaciones.pdf", title: "Figuras Proféticas", subtitle: "(A-L)" },
-    { id: "btnRepresentacionesMZ", file: "representaciones2.pdf", title: "Figuras Proféticas", subtitle: "(M-Z)" },
-    { id: "btnAnexos", file: "Anexos.pdf", title: "Anexos" }
+    { file: "dedicatoria.pdf", title: "Dedicatoria" },
+    { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
+    { file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
+    { file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
+    { file: "profetas.pdf", title: "Profetas" },
+    { file: "division del reino.pdf", title: "División del Reino" },
+    { file: "preexilio.pdf", title: "Preexilio" },
+    { file: "exilio y caída.pdf", title: "Exilio y Caída" },
+    { file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
+    { file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
+    { file: "dinastias.pdf", title: "Dinastías Reales" },
+    { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
+    { file: "el templo.pdf", title: "El Templo de Jerusalén" },
+    { file: "representaciones.pdf", title: "Figuras Proféticas", subtitle: "(A-L)" },
+    { file: "representaciones2.pdf", title: "Figuras Proféticas", subtitle: "(M-Z)" },
+    { file: "Anexos.pdf", title: "Anexos" }
   ];
 
   buttons.forEach(info => {
