@@ -25,7 +25,7 @@ header {
   padding: 20px 20px 15px 20px; 
   background-color: rgba(244, 233, 216, 0.4);
   border-bottom: 2px solid #c9a86a;
-  margin-bottom: 15px; /* Espacio igual al gap entre botones */
+  margin-bottom: 15px; /* Espacio igual al lápiz negro */
 }
 
 .titulo-principal {
@@ -40,15 +40,17 @@ header {
 .button-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
-  gap: 15px; /* Espacio marcado con lápiz negro */
+  gap: 15px; /* DISTANCIA LÁPIZ NEGRO */
   padding: 0 20px; 
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* ===== ÁREA ROJA CORREGIDA (Igual al lápiz negro) ===== */
+/* ===== ÁREA ROJA (CORRECCIÓN DEFINITIVA) ===== */
 main {
-  margin-bottom: 15px; /* Espacio reducido exactamente a 15px */
+  /* Forzamos que el espacio final sea idéntico al lápiz negro */
+  margin-bottom: 15px !important; 
+  padding-bottom: 0;
 }
 
 button.app-btn {
@@ -80,10 +82,11 @@ button.app-btn:hover {
 footer {
   background: #f2e8d5;
   color: #5b4a2e;
-  padding: 10px 15px; 
+  padding: 10px 15px; /* Altura reducida (verde) */
   font-size: 0.85em;
   border-top: 1px solid #c9a86a;
   line-height: 1.4;
+  margin: 0; /* Asegura que no haya saltos extra */
 }
 
 footer strong {
