@@ -1,110 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-<title>Cronología Bíblica Interactiva</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+    <title>Cronología Bíblica Interactiva</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* RESET TOTAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-/* RESET TOTAL */
-* {
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-}
+        body {
+            background: #f8f4e9 url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            font-family: 'Sen', sans-serif;
+            color: #3e2f1c;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-body {
-  background: #f8f4e9 url('https://www.transparenttextures.com/patterns/aged-paper.png');
-  font-family: 'Sen', sans-serif;
-  color: #3e2f1c;
-  text-align: center;
-  display: block !important;
-}
+        /* ===== CABECERA ===== */
+        header {
+            padding-top: 10px;    
+            padding-bottom: 20px;
+            background-color: rgba(244, 233, 216, 0.6);
+            border-bottom: 2px solid #c9a86a;
+        }
 
-/* ===== CABECERA (AQUÍ SUBIMOS EL TÍTULO) ===== */
-header {
-  /* Reducimos el espacio superior (área roja de tu foto) a solo 5px para que suba hasta la línea azul */
-  padding-top: 5px !important;    
-  padding-bottom: 15px !important; /* Espacio verde inferior mantenido en 15px */
-  background-color: rgba(244, 233, 216, 0.4);
-  border-bottom: 2px solid #c9a86a;
-}
+        .titulo-principal {
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 3.5em;
+            color: #4a3728;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
 
-.titulo-principal {
-  font-family: 'UnifrakturCook', cursive;
-  font-size: 3.2em;
-  color: #4a3728;
-  line-height: 1.0 !important; /* Ajuste para que el texto no tenga aire arriba */
-  margin-top: 0 !important;
-}
+        /* ===== CONTENIDO PRINCIPAL ===== */
+        main {
+            flex: 1;
+            padding: 30px 20px;
+        }
 
-/* ===== CONTENIDO PRINCIPAL ===== */
-main {
-  padding-top: 15px !important;    /* Espacio entre header y botones */
-  padding-bottom: 15px !important; /* Espacio entre botones y footer (Lápiz negro) */
-  display: block !important;
-}
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-.button-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 15px !important; /* Distancia del lápiz negro */
-  padding: 0 20px !important;
-  max-width: 1100px;
-  margin: 0 auto !important;
-}
+        button.app-btn {
+            background: #f4e9d8;
+            border: 2px solid #c9a86a;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1em;
+            color: #4a3728;
+            cursor: pointer;
+            font-family: 'Sen', sans-serif;
+            font-weight: 700;
+            min-height: 90px;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
 
-button.app-btn {
-  background: #f4e9d8;
-  border: 2px solid #c9a86a !important;
-  border-radius: 14px !important;
-  padding: 10px !important;
-  font-size: 0.95em;
-  color: #4a3728;
-  cursor: pointer;
-  font-family: 'Sen', sans-serif;
-  font-weight: 600;
-  min-height: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  justify-content: center;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-}
+        button.app-btn:hover {
+            background: #e8d8b0;
+            border-color: #d4af37;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
 
-button.app-btn:hover {
-  background: #e8d8b0;
-  border-color: #d4af37 !important;
-}
+        button.app-btn:active {
+            transform: translateY(0);
+        }
 
-/* ===== FOOTER ===== */
-footer {
-  background: #f2e8d5;
-  color: #5b4a2e;
-  padding: 10px 15px !important; 
-  font-size: 0.85em;
-  border-top: 1px solid #c9a86a;
-  line-height: 1.4 !important;
-  width: 100%;
-}
+        /* ===== FOOTER ===== */
+        footer {
+            background: #f2e8d5;
+            color: #5b4a2e;
+            padding: 20px;
+            font-size: 0.9em;
+            border-top: 1px solid #c9a86a;
+            margin-top: auto;
+        }
 
-footer strong {
-  display: block;
-  margin-top: 2px !important;
-}
+        footer strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 1.1em;
+        }
 
-/* Ajustes Responsive */
-@media (max-width: 900px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px) { 
-  .button-grid { grid-template-columns: repeat(2, 1fr); } 
-  .titulo-principal { font-size: 2.2em; }
-}
-@media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } }
-</style>
+        /* Ajustes Responsive */
+        @media (max-width: 1024px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { 
+            .button-grid { grid-template-columns: repeat(2, 1fr); } 
+            .titulo-principal { font-size: 2.5em; }
+        }
+        @media (max-width: 480px) { 
+            .button-grid { grid-template-columns: 1fr; } 
+            .titulo-principal { font-size: 2.2em; }
+        }
+    </style>
 </head>
 <body>
 
@@ -113,45 +120,52 @@ footer strong {
 </header>
 
 <main>
-  <div class="button-grid" id="buttonGrid"></div>
+    <div class="button-grid" id="buttonGrid"></div>
 </main>
 
 <footer>
-  © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras
-  <strong>Lady Carolina Muñoz Sierra</strong>
+    © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras
+    <strong>Lady Carolina Muñoz Sierra</strong>
 </footer>
 
 <script>
-/* (El script se mantiene igual para que funcionen tus botones) */
 document.addEventListener('DOMContentLoaded', function() {
-  const buttonGrid = document.getElementById("buttonGrid");
-  const buttons = [
-    { file: "dedicatoria.pdf", title: "Dedicatoria" },
-    { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
-    { file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
-    { file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
-    { file: "profetas.pdf", title: "Profetas" },
-    { file: "division del reino.pdf", title: "División del Reino" },
-    { file: "preexilio.pdf", title: "Preexilio" },
-    { file: "exilio y caída.pdf", title: "Exilio y Caída" },
-    { file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
-    { file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
-    { file: "dinastias.pdf", title: "Dinastías Reales" },
-    { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
-    { file: "el templo.pdf", title: "El Templo de Jerusalén" },
-    { file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
-    { file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
-    { file: "Anexos.pdf", title: "Anexos" }
-  ];
+    const buttonGrid = document.getElementById("buttonGrid");
+    
+    // Lista de archivos y títulos
+    const buttons = [
+        { file: "dedicatoria.pdf", title: "Dedicatoria" },
+        { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
+        { file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
+        { file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
+        { file: "profetas.pdf", title: "Profetas" },
+        { file: "division del reino.pdf", title: "División del Reino" },
+        { file: "preexilio.pdf", title: "Preexilio" },
+        { file: "exilio y caída.pdf", title: "Exilio y Caída" },
+        { file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
+        { file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
+        { file: "dinastias.pdf", title: "Dinastías Reales" },
+        { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
+        { file: "el templo.pdf", title: "El Templo de Jerusalén" },
+        { file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
+        { file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
+        { file: "Anexos.pdf", title: "Anexos" }
+    ];
 
-  buttons.forEach(info => {
-    const b = document.createElement('button');
-    b.className = 'app-btn';
-    b.innerText = info.title;
-    buttonGrid.appendChild(b);
-  });
+    buttons.forEach(info => {
+        const b = document.createElement('button');
+        b.className = 'app-btn';
+        b.innerText = info.title;
+        
+        // Función para abrir el PDF al hacer clic
+        b.onclick = function() {
+            window.open(info.file, '_blank');
+        };
+        
+        buttonGrid.appendChild(b);
+    });
 });
 </script>
+
 </body>
 </html>
-
