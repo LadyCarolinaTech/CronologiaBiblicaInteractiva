@@ -21,7 +21,8 @@
         }
 
         header {
-            padding: 20px 0;
+            /* AJUSTE SOLICITADO: 15px de margen superior (área azul) */
+            padding: 15px 0 20px 0; 
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
             text-align: center;
@@ -74,13 +75,13 @@
             text-align: center;
         }
 
-        /* ESTILO PARA TU NOMBRE */
         .nombre-autora {
-            font-size: 1.25em; /* Aumenta aproximadamente 2 puntos el tamaño */
+            font-size: 1.25em; 
             display: inline-block;
             margin-left: 5px;
         }
 
+        /* MODAL Y VISOR */
         .modal {
             display: none;
             position: fixed;
@@ -142,7 +143,7 @@
         @media (max-width: 900px) { 
             .button-grid { grid-template-columns: 1fr; }
             .titulo-principal { font-size: 3.5em; } 
-            .modal-title { font-size: 1.5em; }
+            header { padding: 10px 0; }
         }
     </style>
 </head>
@@ -246,4 +247,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
