@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    <title>Cronología Bíblica</title>
+    <title>Cronología Bíblica Interactiva</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
         }
 
         header {
-            padding-top: 10px; padding-bottom: 20px;
+            padding: 15px 0 20px;
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
         }
@@ -37,8 +37,9 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        main { flex: 1; padding: 30px 20px; }
+        main { flex: 1; padding: 20px; }
 
+        /* CUADRÍCULA PARA PC */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
@@ -47,17 +48,18 @@
             margin: 0 auto;
         }
 
+        /* BOTONES */
         button.app-btn {
             background: #f4e9d8;
             border: 2px solid #c9a86a;
             border-radius: 12px;
             padding: 15px;
-            font-size: 1em;
+            font-size: 1.1em;
             color: #4a3728;
             cursor: pointer;
             font-family: 'Sen', sans-serif;
             font-weight: 700;
-            min-height: 90px;
+            min-height: 85px;
             display: flex;
             flex-direction: column;
             align-items: center; 
@@ -69,24 +71,23 @@
         button.app-btn:hover {
             background: #e8d8b0;
             border-color: #d4af37;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transform: scale(1.02);
         }
 
-        /* ===== MODAL ADAPTATIVO EXTREMO ===== */
+        /* ===== MODAL ===== */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             inset: 0;
             width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85);
+            background-color: rgba(0,0,0,0.6); /* Fondo semi-oscuro tras el modal */
         }
 
         .modal-content {
-            background-color: white;
+            background-color: white; /* FONTO BLANCO TOTAL SOLICITADO */
             margin: 1% auto;
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
             width: 95%;
             height: 98%;
@@ -97,26 +98,14 @@
             overflow: hidden;
         }
 
-        /* AJUSTE TOTAL PARA CELULAR */
-        @media (max-width: 600px) {
-            .modal-content {
-                width: 100% !important; /* Sin bordes a los lados */
-                height: 100% !important;
-                margin: 0 !important;
-                border-radius: 0 !important;
-                padding: 10px 5px !important;
-            }
-            .button-grid { grid-template-columns: 1fr; }
-            .titulo-principal { font-size: 2.2em; }
-        }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #eee;
             padding-bottom: 10px;
             margin-bottom: 10px;
+            background-color: white;
         }
 
         .modal-header h2 {
@@ -133,35 +122,47 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #404040; /* Fondo oscuro para resaltar el PDF */
+            background-color: white; /* FONTO BLANCO DETRÁS DEL PDF */
         }
 
         .close {
             color: #3e2f1c;
-            font-size: 45px;
+            font-size: 40px;
             font-weight: bold;
             cursor: pointer;
-            padding: 0 10px;
             line-height: 1;
         }
 
         #pdfViewerContainer canvas {
-            margin: 15px auto;
+            margin: 0 auto 15px auto;
             display: block;
             max-width: 100%;
             height: auto !important;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Sombra suave en blanco */
+        }
+
+        /* ===== AJUSTE CELULAR: SIEMPRE VERTICAL ===== */
+        @media (max-width: 850px) { 
+            /* Se activa antes para tablets y celulares */
+            .button-grid {
+                grid-template-columns: 1fr !important; /* Fuerza una sola columna siempre */
+                max-width: 500px;
+            }
+            .modal-content {
+                width: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+            .titulo-principal { font-size: 2.2em; }
         }
 
         footer {
             background: #f2e8d5;
-            padding: 20px;
+            padding: 15px;
             border-top: 1px solid #c9a86a;
             margin-top: auto;
         }
-
-        @media (max-width: 1024px) { .button-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { .button-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -187,8 +188,7 @@
 </div>
 
 <footer>
-    © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras
-    <strong>Lady Carolina Muñoz Sierra</strong>
+    © 2026 Cronología Bíblica — <strong>Lady Carolina Muñoz Sierra</strong>
 </footer>
 
 <script>
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function openModalAndRender(url, title) {
         modalTitle.textContent = title;
-        viewer.innerHTML = '<p style="color:white; margin-top:50px;">Optimizando nitidez...</p>';
+        viewer.innerHTML = '<p style="margin-top:50px;">Cargando documento...</p>';
         modal.style.display = 'block';
 
         try {
@@ -239,14 +239,14 @@ document.addEventListener('DOMContentLoaded', function() {
             viewer.innerHTML = '';
             
             // ESCALAS SOLICITADAS: 3.0 para PC, 2.0 para Celulares
-            const isMobile = window.innerWidth <= 600;
+            const isMobile = window.innerWidth <= 850;
             const RENDER_SCALE = isMobile ? 2.0 : 3.0;
 
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const viewport = page.getViewport({ scale: RENDER_SCALE });
                 const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d', { alpha: false }); // Optimiza renderizado
+                const context = canvas.getContext('2d', { alpha: false });
                 
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }).promise;
             }
         } catch (err) {
-            viewer.innerHTML = `<p style="color:white; margin-top:50px;">Error al cargar el archivo PDF.</p>`;
+            viewer.innerHTML = `<p style="margin-top:50px;">No se pudo cargar el PDF.</p>`;
         }
     }
 
