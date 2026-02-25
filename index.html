@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
     <title>Cronología Bíblica Interactiva</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
     <style>
@@ -16,32 +15,30 @@
             background: #f8f4e9 url('https://www.transparenttextures.com/patterns/aged-paper.png');
             font-family: 'Sen', sans-serif;
             color: #3e2f1c;
-            text-align: center;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* CABECERA */
         header {
             padding: 10px 0;
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
+            text-align: center;
         }
 
         .titulo-principal {
             font-family: 'UnifrakturCook', cursive;
             font-size: 3.5em;
             color: #4a3728;
-            line-height: 1;
         }
 
-        /* DISEÑO DE CUADRÍCULA CON MÁRGENES DE 15PX (MEDIDA VERDE) */
+        /* MARGEN DE 15PX (MEDIDA VERDE) SIN ÁREAS ROJAS */
         main { 
             flex: 1; 
             display: flex;
             justify-content: center;
-            align-items: center; 
+            align-items: center;
             padding: 15px; 
         }
 
@@ -50,84 +47,95 @@
             grid-template-columns: repeat(4, 1fr); 
             gap: 15px; 
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
         }
 
         button.app-btn {
             background: #f4e9d8;
             border: 2px solid #c9a86a;
             border-radius: 12px;
-            padding: 10px;
+            padding: 15px;
             font-size: 1.05em; 
             color: #4a3728;
             cursor: pointer;
             font-family: 'Sen', sans-serif;
             font-weight: 700;
-            min-height: 85px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center;
+            min-height: 90px;
             transition: all 0.3s ease;
         }
 
-        /* FOOTER: LETRA IGUAL A BOTONES Y ESPACIO SIMÉTRICO (VERDE/AZUL) */
+        /* FOOTER SIMÉTRICO (VERDE Y AZUL IGUALES) */
         footer {
             background: #f2e8d5;
-            padding: 15px 0; /* 15px arriba y abajo para evitar el recorte */
+            padding: 15px 0; 
             border-top: 1px solid #c9a86a;
-            font-family: 'Sen', sans-serif;
             font-weight: 700;
             font-size: 1.05em; 
             color: #4a3728;
+            text-align: center;
         }
 
-        /* MODAL CORREGIDO: SIN DESBORDAMIENTO */
+        /* MODAL CON TÍTULO CENTRADO */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             inset: 0;
-            background-color: #ffffff; 
+            background-color: white; 
         }
 
         .modal-content {
-            background-color: #ffffff;
             width: 100%; height: 100%;
             display: flex;
             flex-direction: column;
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 50px 1fr 50px; /* CREA ESPACIO PARA CENTRAR EL TÍTULO */
             align-items: center;
-            padding: 10px 30px;
-            border-bottom: 1px solid #eee;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-title {
+            grid-column: 2; /* FUERZA AL TÍTULO A ESTAR EN EL CENTRO */
+            text-align: center;
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 2.2em;
+            color: #4a3728;
+        }
+
+        .close { 
+            grid-column: 3; 
+            font-size: 40px; 
+            cursor: pointer; 
+            text-align: right;
         }
 
         .modal-body {
-            flex-grow: 1;
+            flex: 1;
             overflow-y: auto;
-            background-color: #ffffff;
+            background-color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
+        /* VISOR SIN DESBORDE (PARA PC Y CELULAR) */
+        #pdfViewerContainer { width: 100%; max-width: 1000px; }
         #pdfViewerContainer canvas {
-            max-width: 100%; /* CLAVE: El PDF nunca será más ancho que la pantalla */
+            width: 100% !important;
             height: auto !important;
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .close { font-size: 40px; cursor: pointer; color: #3e2f1c; }
-
         @media (max-width: 900px) { 
-            .button-grid { grid-template-columns: 1fr !important; max-width: 400px; }
+            .button-grid { grid-template-columns: 1fr; max-width: 350px; }
             .titulo-principal { font-size: 2.2em; }
+            .modal-title { font-size: 1.8em; }
         }
     </style>
 </head>
@@ -144,7 +152,7 @@
 <div id="pdfModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalTitleText" style="font-family:'UnifrakturCook'; font-size: 2em;"></h2>
+            <div></div> <h2 id="modalTitleText" class="modal-title"></h2>
             <span class="close" id="closeModal">&times;</span>
         </div>
         <div class="modal-body">
@@ -181,38 +189,32 @@ document.addEventListener('DOMContentLoaded', function() {
         { file: "dinastias.pdf", title: "Dinastías Reales" },
         { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
         { file: "el templo.pdf", title: "El Templo de Jerusalén" },
-        { file: "representaciones.pdf", title: "Figuras Proféticas", label: "(A-L)" },
-        { file: "representaciones2.pdf", title: "Figuras Proféticas", label: "(M-Z)" },
+        { file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
+        { file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
         { file: "Anexos.pdf", title: "Anexos" }
     ];
 
     buttons.forEach(info => {
         const b = document.createElement('button');
         b.className = 'app-btn';
-        b.innerHTML = info.label ? `${info.title}<br><span style="font-size:0.8em; opacity:0.8;">${info.label}</span>` : info.title;
+        b.textContent = info.title;
         b.onclick = () => openModalAndRender(info.file, info.title);
         buttonGrid.appendChild(b);
     });
 
     async function openModalAndRender(url, title) {
         modalTitle.textContent = title;
-        viewer.innerHTML = '<p>Cargando documento...</p>';
+        viewer.innerHTML = '<p style="text-align:center; padding:20px;">Cargando documento...</p>';
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
         try {
             const pdf = await pdfjsLib.getDocument(url).promise;
             viewer.innerHTML = '';
-
+            
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
-                
-                // AUTO-AJUSTE AL ANCHO DE LA PANTALLA
-                const viewportOriginal = page.getViewport({ scale: 1.0 });
-                const containerWidth = viewer.clientWidth - 40; 
-                const scale = containerWidth / viewportOriginal.width;
-                const viewport = page.getViewport({ scale: scale * 1.5 }); // Escala optimizada para nitidez sin desbordar
-
+                const viewport = page.getViewport({ scale: 2.0 });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 canvas.height = viewport.height;
@@ -220,15 +222,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 viewer.appendChild(canvas);
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
             }
-        } catch (err) { viewer.innerHTML = '<p>Error al cargar el PDF.</p>'; }
-    }
-
-    document.getElementById("closeModal").onclick = () => { 
-        modal.style.display = "none"; 
-        viewer.innerHTML = ""; 
-        document.body.style.overflow = 'auto';
-    };
-});
-</script>
-</body>
-</html>
+        } catch (err) { viewer.innerHTML = '<p>Error al
