@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    <title>Cronología Bíblica Interactiva</title>
+    <title>Cronología Bíblica</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
@@ -22,9 +22,9 @@
             flex-direction: column;
         }
 
-        /* AJUSTE DE TÍTULO (SUBIR POSICIÓN) */
+        /* CABECERA */
         header {
-            padding: 5px 0 5px; /* Reducción de espacio superior/inferior */
+            padding: 10px 0; 
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
         }
@@ -34,13 +34,13 @@
             font-size: 3.5em;
             color: #4a3728;
             margin: 0;
-            line-height: 1.1;
+            line-height: 1;
         }
 
-        /* CONTENEDOR CON MEDIDAS SIMÉTRICAS */
+        /* CONTENEDOR PRINCIPAL CON ESPACIADO UNIFORME DE 15PX */
         main { 
             flex: 1; 
-            padding: 30px 20px; /* Margen constante de 30px arriba y abajo */
+            padding: 15px; /* DISTANCIA UNIFORME SOLICITADA (15px) */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -49,7 +49,7 @@
         .button-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
-            gap: 20px; /* Separación constante entre botones */
+            gap: 15px; /* DISTANCIA ENTRE BOTONES SOLICITADA (15px) */
             max-width: 1200px;
             width: 100%;
         }
@@ -79,7 +79,7 @@
             z-index: 1000;
             inset: 0;
             width: 100%; height: 100%;
-            background-color: #ffffff; /* Fondo blanco solicitado */
+            background-color: #ffffff; 
         }
 
         .modal-content {
@@ -123,23 +123,21 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
 
-        /* FOOTER SIMÉTRICO */
+        /* FOOTER */
         footer {
             background: #f2e8d5;
             padding: 15px;
             border-top: 1px solid #c9a86a;
-            /* El espacio entre botones y footer lo da el padding de 'main' */
         }
 
         /* CELULAR: VERTICAL Y AJUSTADO */
         @media (max-width: 900px) { 
             .button-grid {
                 grid-template-columns: 1fr !important;
-                gap: 20px; /* Misma medida entre botones */
+                gap: 15px; 
                 max-width: 400px;
             }
             .titulo-principal { font-size: 2.2em; }
-            main { padding: 20px; } /* Ajuste de aire para móviles */
         }
     </style>
 </head>
@@ -166,7 +164,7 @@
 </div>
 
 <footer>
-    © 2026 Cronología Bíblica — <strong>Lady Carolina Muñoz Sierra</strong>
+    <strong>© 2026 Cronología Bíblica inspirada en las Sagradas Escrituras Lady Carolina Muñoz Sierra</strong>
 </footer>
 
 <script>
@@ -208,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function openModalAndRender(url, title) {
         modalTitle.textContent = title;
-        viewer.innerHTML = '<p style="margin-top:50px;">Cargando nitidez 3.0...</p>';
+        viewer.innerHTML = '<p style="margin-top:50px;">Cargando documento...</p>';
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
