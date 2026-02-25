@@ -21,7 +21,6 @@
         }
 
         header {
-            /* AJUSTE SOLICITADO: 10px de margen superior en el área azul */
             padding: 10px 0 20px 0; 
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
@@ -81,7 +80,6 @@
             margin-left: 5px;
         }
 
-        /* MODAL Y VISOR */
         .modal {
             display: none;
             position: fixed;
@@ -160,7 +158,8 @@
 <div id="pdfModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <div></div> <h2 id="modalTitleText" class="modal-title"></h2>
+            <div></div> 
+            <h2 id="modalTitleText" class="modal-title"></h2>
             <span class="close" id="closeModal">&times;</span>
         </div>
         <div class="modal-body">
@@ -212,7 +211,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function openModalAndRender(url, title) {
-        modalTitle.textContent = title;
+
+        // 🔹 ARREGLO APLICADO AQUÍ
+        if (title.includes("Figuras Proféticas")) {
+            modalTitle.textContent = "Figuras Proféticas";
+        } else {
+            modalTitle.textContent = title;
+        }
+
         viewer.innerHTML = '<p style="text-align:center; color:#4a3728; padding:20px;">Cargando documento...</p>';
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
