@@ -33,11 +33,12 @@
             color: #4a3728;
         }
 
+        /* AJUSTE PARA SIMETRÍA: Espacio arriba igual a espacio abajo */
         main { 
             flex: 1; 
             display: flex;
             justify-content: center;
-            align-items: flex-start; 
+            align-items: center; /* Centra verticalmente para que el margen rojo y verde sean iguales */
             padding: 15px; 
         }
 
@@ -63,9 +64,10 @@
             transition: all 0.3s ease;
         }
 
+        /* FOOTER: Margen de 15px debajo del nombre */
         footer {
             background: #f2e8d5;
-            padding: 15px 0; 
+            padding: 15px 0 30px 0; /* Aumentamos el padding inferior para dar los 15px extras de margen */
             border-top: 1px solid #c9a86a;
             font-weight: 700;
             font-size: 1.05em; 
@@ -73,20 +75,20 @@
             text-align: center;
         }
 
-        /* MODAL CON FONDO BLANCO */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             inset: 0;
-            background-color: #ffffff; /* Fondo blanco */
+            background-color: #ffffff !important; 
         }
 
         .modal-content {
-            width: 100%; height: 100%;
+            width: 100%; 
+            height: 100%;
             display: flex;
             flex-direction: column;
-            background-color: #ffffff; /* Fondo blanco */
+            background-color: #ffffff !important;
         }
 
         .modal-header {
@@ -116,37 +118,34 @@
         .modal-body {
             flex: 1;
             overflow-y: auto;
-            background-color: #ffffff; /* Fondo del área de lectura blanco */
+            background-color: #ffffff !important; 
             padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* VISOR DEL PDF */
         #pdfViewerContainer { 
             width: 100%; 
             max-width: 900px; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #ffffff;
+            background-color: #ffffff !important;
         }
 
         #pdfViewerContainer canvas {
             max-width: 100%; 
             height: auto !important;
-            margin-bottom: 25px;
-            /* Sombra suave para separar las hojas del fondo blanco */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-            background-color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            background-color: #ffffff;
         }
 
         @media (max-width: 900px) { 
             .button-grid { grid-template-columns: 1fr; max-width: 100%; }
             .titulo-principal { font-size: 2.2em; }
             .modal-title { font-size: 1.5em; }
-            .modal-body { padding: 10px 5px; }
         }
     </style>
 </head>
@@ -219,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
-        // Escala de nitidez según dispositivo
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const renderScale = isMobile ? 2.0 : 3.0;
 
@@ -240,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
             }
         } catch (err) { 
-            viewer.innerHTML = '<p style="color:red;">Error al cargar el PDF. Inténtelo de nuevo.</p>'; 
+            viewer.innerHTML = '<p style="color:red; text-align:center;">Error al cargar el PDF.</p>'; 
         }
     }
 
