@@ -36,7 +36,7 @@
             line-height: 1;
         }
 
-        /* DISEÑO DE CUADRÍCULA CON MÁRGENES DE 15PX (MEDIDA VERDE) */
+        /* MÁRGENES DE 15PX (MEDIDA VERDE) */
         main { 
             flex: 1; 
             display: flex;
@@ -71,10 +71,10 @@
             transition: all 0.3s ease;
         }
 
-        /* FOOTER: LETRA IGUAL A BOTONES Y ESPACIO SIMÉTRICO (VERDE/AZUL) */
+        /* FOOTER CON SIMETRÍA (VERDE/AZUL) */
         footer {
             background: #f2e8d5;
-            padding: 15px 0; /* 15px arriba y abajo para evitar el recorte */
+            padding: 15px 0; 
             border-top: 1px solid #c9a86a;
             font-family: 'Sen', sans-serif;
             font-weight: 700;
@@ -82,7 +82,7 @@
             color: #4a3728;
         }
 
-        /* MODAL CORREGIDO: SIN DESBORDAMIENTO */
+        /* MODAL CON TÍTULO CENTRADO */
         .modal {
             display: none;
             position: fixed;
@@ -100,10 +100,26 @@
 
         .modal-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             padding: 10px 30px;
             border-bottom: 1px solid #eee;
+            position: relative; /* Para que la X flote a la derecha */
+        }
+
+        .modal-header h2 {
+            width: 100%; /* Ocupa todo el ancho para centrar */
+            text-align: center;
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 2em;
+            color: #4a3728;
+        }
+
+        .close { 
+            font-size: 40px; 
+            cursor: pointer; 
+            color: #3e2f1c;
+            position: absolute;
+            right: 30px; /* La X se queda a la derecha siempre */
         }
 
         .modal-body {
@@ -117,17 +133,16 @@
         }
 
         #pdfViewerContainer canvas {
-            max-width: 100%; /* CLAVE: El PDF nunca será más ancho que la pantalla */
+            max-width: 100%; 
             height: auto !important;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .close { font-size: 40px; cursor: pointer; color: #3e2f1c; }
-
         @media (max-width: 900px) { 
             .button-grid { grid-template-columns: 1fr !important; max-width: 400px; }
             .titulo-principal { font-size: 2.2em; }
+            .modal-header h2 { font-size: 1.5em; padding-right: 30px; }
         }
     </style>
 </head>
@@ -144,7 +159,7 @@
 <div id="pdfModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalTitleText" style="font-family:'UnifrakturCook'; font-size: 2em;"></h2>
+            <h2 id="modalTitleText"></h2>
             <span class="close" id="closeModal">&times;</span>
         </div>
         <div class="modal-body">
@@ -189,46 +204,3 @@ document.addEventListener('DOMContentLoaded', function() {
     buttons.forEach(info => {
         const b = document.createElement('button');
         b.className = 'app-btn';
-        b.innerHTML = info.label ? `${info.title}<br><span style="font-size:0.8em; opacity:0.8;">${info.label}</span>` : info.title;
-        b.onclick = () => openModalAndRender(info.file, info.title);
-        buttonGrid.appendChild(b);
-    });
-
-    async function openModalAndRender(url, title) {
-        modalTitle.textContent = title;
-        viewer.innerHTML = '<p>Cargando documento...</p>';
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-
-        try {
-            const pdf = await pdfjsLib.getDocument(url).promise;
-            viewer.innerHTML = '';
-
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                
-                // AUTO-AJUSTE AL ANCHO DE LA PANTALLA
-                const viewportOriginal = page.getViewport({ scale: 1.0 });
-                const containerWidth = viewer.clientWidth - 40; 
-                const scale = containerWidth / viewportOriginal.width;
-                const viewport = page.getViewport({ scale: scale * 1.5 }); // Escala optimizada para nitidez sin desbordar
-
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                viewer.appendChild(canvas);
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-            }
-        } catch (err) { viewer.innerHTML = '<p>Error al cargar el PDF.</p>'; }
-    }
-
-    document.getElementById("closeModal").onclick = () => { 
-        modal.style.display = "none"; 
-        viewer.innerHTML = ""; 
-        document.body.style.overflow = 'auto';
-    };
-});
-</script>
-</body>
-</html>
