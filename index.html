@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    <title>Cronología Bíblica Interactiva</title>
+    <title>Cronología Bíblica</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
@@ -21,7 +21,7 @@
         }
 
         header {
-            /* Margen superior de 10px según lo solicitado */
+            /* AJUSTE SOLICITADO: 10px de margen superior en el área azul */
             padding: 10px 0 20px 0; 
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
@@ -81,7 +81,7 @@
             margin-left: 5px;
         }
 
-        /* MODAL CON FONDO BLANCO */
+        /* MODAL Y VISOR */
         .modal {
             display: none;
             position: fixed;
@@ -103,7 +103,6 @@
             align-items: center;
             padding: 10px 20px;
             border-bottom: 1px solid #eee;
-            background-color: #ffffff;
         }
 
         .modal-title {
@@ -132,7 +131,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #ffffff !important;
         }
 
         #pdfViewerContainer canvas {
@@ -140,7 +138,6 @@
             height: auto !important;
             margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            background-color: #ffffff;
         }
 
         @media (max-width: 900px) { 
@@ -173,7 +170,8 @@
 </div>
 
 <footer>
-    © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras — <span class="nombre-autora">Lady Carolina Muñoz Sierra</span>
+    © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras <br>
+    <span class="nombre-autora">Lady Carolina Muñoz Sierra</span>
 </footer>
 
 <script>
@@ -214,13 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function openModalAndRender(url, title) {
-        // Limpiamos el título para el modal si es Figuras Proféticas
-        let cleanTitle = title;
-        if (title.includes("Figuras Proféticas")) {
-            cleanTitle = "Figuras Proféticas";
-        }
-        
-        modalTitle.textContent = cleanTitle;
+        modalTitle.textContent = title;
         viewer.innerHTML = '<p style="text-align:center; color:#4a3728; padding:20px;">Cargando documento...</p>';
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
