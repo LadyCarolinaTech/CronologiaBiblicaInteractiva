@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    <title>Cronología Bíblica</title>
+    <title>Cronología Bíblica Interactiva</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
             line-height: 1;
         }
 
-        /* MÁRGENES DE 15PX (MEDIDA VERDE) */
+        /* DISEÑO DE CUADRÍCULA CON MÁRGENES DE 15PX (MEDIDA VERDE) */
         main { 
             flex: 1; 
             display: flex;
@@ -71,7 +71,7 @@
             transition: all 0.3s ease;
         }
 
-        /* FOOTER CON SIMETRÍA (VERDE/AZUL) */
+        /* FOOTER: SIMETRÍA TOTAL Y LETRA IGUAL A BOTONES */
         footer {
             background: #f2e8d5;
             padding: 15px 0; 
@@ -99,27 +99,19 @@
         }
 
         .modal-header {
-            display: flex;
+            display: grid;
+            grid-template-columns: 50px 1fr 50px; 
             align-items: center;
-            padding: 10px 30px;
+            padding: 10px 20px;
             border-bottom: 1px solid #eee;
-            position: relative; /* Para que la X flote a la derecha */
         }
 
         .modal-header h2 {
-            width: 100%; /* Ocupa todo el ancho para centrar */
+            grid-column: 2;
             text-align: center;
             font-family: 'UnifrakturCook', cursive;
-            font-size: 2em;
+            font-size: 2.2em;
             color: #4a3728;
-        }
-
-        .close { 
-            font-size: 40px; 
-            cursor: pointer; 
-            color: #3e2f1c;
-            position: absolute;
-            right: 30px; /* La X se queda a la derecha siempre */
         }
 
         .modal-body {
@@ -139,10 +131,12 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
+        .close { font-size: 40px; cursor: pointer; color: #3e2f1c; text-align: right; }
+
         @media (max-width: 900px) { 
             .button-grid { grid-template-columns: 1fr !important; max-width: 400px; }
             .titulo-principal { font-size: 2.2em; }
-            .modal-header h2 { font-size: 1.5em; padding-right: 30px; }
+            .modal-header h2 { font-size: 1.6em; }
         }
     </style>
 </head>
@@ -159,7 +153,7 @@
 <div id="pdfModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalTitleText"></h2>
+            <div></div> <h2 id="modalTitleText"></h2>
             <span class="close" id="closeModal">&times;</span>
         </div>
         <div class="modal-body">
@@ -169,7 +163,7 @@
 </div>
 
 <footer>
-    © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras <br> Lady Carolina Muñoz Sierra
+    © 2026 Cronología Bíblica — Lady Carolina Muñoz Sierra
 </footer>
 
 <script>
@@ -204,4 +198,51 @@ document.addEventListener('DOMContentLoaded', function() {
     buttons.forEach(info => {
         const b = document.createElement('button');
         b.className = 'app-btn';
+        b.innerHTML = info.label ? `${info.title}<br><span style="font-size:0.8em; opacity:0.8;">${info.label}</span>` : info.title;
+        b.onclick = () => openModalAndRender(info.file, info.title);
+        buttonGrid.appendChild(b);
+    });
 
+    async function openModalAndRender(url, title) {
+        modalTitle.textContent = title;
+        viewer.innerHTML = '<p>Cargando documento...</p>';
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+
+        try {
+            const pdf = await pdfjsLib.getDocument(url).promise;
+            viewer.innerHTML = '';
+
+            // DETECCIÓN DE NITIDEZ: 2 PARA CELULAR, 3 PARA PC
+            const nitidezScale = window.innerWidth <= 900 ? 2.0 : 3.0;
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                
+                // AJUSTE DINÁMICO AL ANCHO DEL MODAL
+                const viewportOriginal = page.getViewport({ scale: 1.0 });
+                const containerWidth = viewer.clientWidth - 40; 
+                const baseScale = containerWidth / viewportOriginal.width;
+                
+                // Aplicamos la escala de nitidez solicitada
+                const viewport = page.getViewport({ scale: baseScale * nitidezScale }); 
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                viewer.appendChild(canvas);
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+            }
+        } catch (err) { viewer.innerHTML = '<p>Error al cargar el PDF.</p>'; }
+    }
+
+    document.getElementById("closeModal").onclick = () => { 
+        modal.style.display = "none"; 
+        viewer.innerHTML = ""; 
+        document.body.style.overflow = 'auto';
+    };
+});
+</script>
+</body>
+</html>
