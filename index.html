@@ -222,4 +222,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 viewer.appendChild(canvas);
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
             }
-        } catch (err) { viewer.innerHTML = '<p>Error al
+        } catch (err) { viewer.innerHTML = '<p>Error al cargar el PDF.</p>'; }
+    }
+
+    document.getElementById("closeModal").onclick = () => { 
+        modal.style.display = "none"; 
+        viewer.innerHTML = ""; 
+        document.body.style.overflow = 'auto';
+    };
+});
+</script>
+</body>
+</html>
