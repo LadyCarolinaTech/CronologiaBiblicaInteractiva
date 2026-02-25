@@ -7,7 +7,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+
     <style>
         /* RESET TOTAL */
         * {
@@ -81,8 +82,74 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
-        button.app-btn:active {
-            transform: translateY(0);
+        /* ===== ESTILOS DEL MODAL (CORREGIDOS) ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            padding-top: 10px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 95%;
+            max-width: 1000px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            font-family: 'UnifrakturCook', cursive;
+            color: #4a3728;
+            font-size: 1.8em;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .modal-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .close {
+            color: #3e2f1c;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover { color: #d4af37; }
+
+        #pdfViewerContainer canvas {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin: 15px auto;
+            display: block;
+            max-width: 100%;
+            height: auto;
         }
 
         /* ===== FOOTER ===== */
@@ -123,6 +190,18 @@
     <div class="button-grid" id="buttonGrid"></div>
 </main>
 
+<div id="pdfModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitleText"></h2>
+            <span class="close" id="closeModal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="pdfViewerContainer"></div>
+        </div>
+    </div>
+</div>
+
 <footer>
     © 2026 Cronología Bíblica inspirada en las Sagradas Escrituras
     <strong>Lady Carolina Muñoz Sierra</strong>
@@ -130,9 +209,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // 3. CONFIGURACIÓN DEL TRABAJADOR PDF
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
     const buttonGrid = document.getElementById("buttonGrid");
-    
-    // Lista de archivos y títulos
+    const modal = document.getElementById("pdfModal");
+    const closeBtn = document.getElementById("closeModal");
+    const viewer = document.getElementById("pdfViewerContainer");
+    const modalTitle = document.getElementById('modalTitleText');
+
     const buttons = [
         { file: "dedicatoria.pdf", title: "Dedicatoria" },
         { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
@@ -157,13 +243,40 @@ document.addEventListener('DOMContentLoaded', function() {
         b.className = 'app-btn';
         b.innerText = info.title;
         
-        // Función para abrir el PDF al hacer clic
+        // 4. CAMBIO DE WINDOW.OPEN POR LA FUNCIÓN DEL MODAL
         b.onclick = function() {
-            window.open(info.file, '_blank');
+            openModalAndRender(info.file, info.title);
         };
         
         buttonGrid.appendChild(b);
     });
+
+    async function openModalAndRender(url, title) {
+        modalTitle.textContent = title;
+        viewer.innerHTML = '<p style="margin-top:50px;">Cargando documento...</p>';
+        modal.style.display = 'block';
+
+        try {
+            const pdf = await pdfjsLib.getDocument(url).promise;
+            viewer.innerHTML = ''; // Limpiar mensaje de carga
+            
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                viewer.appendChild(canvas);
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+            }
+        } catch (err) {
+            viewer.innerHTML = `<p style="color:red; margin-top:50px;">Error al cargar: ${url}</p>`;
+        }
+    }
+
+    closeBtn.onclick = () => { modal.style.display = "none"; viewer.innerHTML = ""; };
+    window.onclick = (e) => { if (e.target == modal) { modal.style.display = "none"; viewer.innerHTML = ""; } };
 });
 </script>
 
