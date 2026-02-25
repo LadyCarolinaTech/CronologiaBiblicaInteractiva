@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
     <style>
+        /* RESET TOTAL */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -22,7 +23,7 @@
             flex-direction: column;
         }
 
-        /* CABECERA: 15PX DE ESPACIO HACIA ABAJO */
+        /* CABECERA: AJUSTE DE 15PX HACIA ABAJO */
         header {
             padding: 10px 0 15px 0; 
             background-color: rgba(244, 233, 216, 0.6);
@@ -37,34 +38,37 @@
             line-height: 1;
         }
 
-        /* CUERPO: ELIMINAMOS LOS ESPACIOS GRANDES (LAS X NEGRAS) */
+        /* CONTENEDOR PRINCIPAL: AJUSTE ESTRICTO DE MÁRGENES (X ROJAS) */
         main { 
             flex: 1; 
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Para que empiece cerca del título */
-            padding: 15px; /* DISTANCIA DE 15PX EN TODO EL BORDE */
+            align-items: center;
+            /* Aplicamos 15px de margen en todos los lados para eliminar las áreas rojas */
+            padding: 15px; 
         }
 
         .button-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
-            gap: 15px; /* DISTANCIA EXACTA ENTRE BOTONES */
+            /* Esta es la medida de referencia que pediste */
+            gap: 15px; 
             width: 100%;
-            max-width: 1200px; /* Ajusta este valor si quieres que la cuadrícula sea más o menos ancha */
+            /* Ajustamos el ancho máximo para que no deje aire a los lados en PC */
+            max-width: 1100px; 
         }
 
         button.app-btn {
             background: #f4e9d8;
             border: 2px solid #c9a86a;
             border-radius: 12px;
-            padding: 15px;
-            font-size: 1.05em;
+            padding: 10px;
+            font-size: 1em;
             color: #4a3728;
             cursor: pointer;
             font-family: 'Sen', sans-serif;
             font-weight: 700;
-            min-height: 85px;
+            min-height: 80px;
             display: flex;
             flex-direction: column;
             align-items: center; 
@@ -77,7 +81,7 @@
             transform: scale(1.02);
         }
 
-        /* FOOTER: 15PX DE DISTANCIA UNIFORME */
+        /* FOOTER: 15PX ABAJO DEL NOMBRE */
         footer {
             background: #f2e8d5;
             padding: 15px; 
@@ -85,7 +89,7 @@
             font-size: 0.9em;
         }
 
-        /* MODAL 100% BLANCO */
+        /* MODAL: FONDO BLANCO TOTAL (X VERDES) */
         .modal {
             display: none;
             position: fixed;
@@ -129,13 +133,15 @@
 
         .close { font-size: 50px; cursor: pointer; line-height: 0.8; }
 
-        /* AJUSTES PARA CELULAR (VERTICAL) */
+        /* CELULAR: SIEMPRE VERTICAL SIN IMPORTAR ORIENTACIÓN */
         @media (max-width: 900px) { 
             .button-grid {
                 grid-template-columns: 1fr !important;
-                max-width: 400px;
+                max-width: 350px;
+                gap: 15px;
             }
             .titulo-principal { font-size: 2.2em; }
+            main { padding: 15px; }
         }
     </style>
 </head>
@@ -211,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const pdf = await pdfjsLib.getDocument(url).promise;
             viewer.innerHTML = '';
-            // RESOLUCIONES PEDIDAS: 3 PARA PC, 2 PARA CELULAR
+            // NITIDEZ: 3 PARA PC, 2 PARA CELULAR
             const RENDER_SCALE = window.innerWidth <= 900 ? 2.0 : 3.0;
 
             for (let i = 1; i <= pdf.numPages; i++) {
