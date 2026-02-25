@@ -73,18 +73,20 @@
             text-align: center;
         }
 
+        /* MODAL CON FONDO BLANCO */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             inset: 0;
-            background-color: white; 
+            background-color: #ffffff; /* Fondo blanco */
         }
 
         .modal-content {
             width: 100%; height: 100%;
             display: flex;
             flex-direction: column;
+            background-color: #ffffff; /* Fondo blanco */
         }
 
         .modal-header {
@@ -92,7 +94,8 @@
             grid-template-columns: 50px 1fr 50px; 
             align-items: center;
             padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
+            background-color: #ffffff;
         }
 
         .modal-title {
@@ -113,27 +116,29 @@
         .modal-body {
             flex: 1;
             overflow-y: auto;
-            background-color: #525659; /* Fondo gris tipo lector PDF para mejor contraste */
+            background-color: #ffffff; /* Fondo del área de lectura blanco */
             padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* AJUSTE DINÁMICO DEL PDF */
+        /* VISOR DEL PDF */
         #pdfViewerContainer { 
             width: 100%; 
-            max-width: 900px; /* Tamaño ideal para lectura en PC */
+            max-width: 900px; 
             display: flex;
             flex-direction: column;
             align-items: center;
+            background-color: #ffffff;
         }
 
         #pdfViewerContainer canvas {
-            max-width: 100%; /* Se ajusta al ancho del celular sin salirse */
+            max-width: 100%; 
             height: auto !important;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            /* Sombra suave para separar las hojas del fondo blanco */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
             background-color: white;
         }
 
@@ -210,11 +215,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function openModalAndRender(url, title) {
         modalTitle.textContent = title;
-        viewer.innerHTML = '<p style="text-align:center; color:white; padding:20px;">Cargando documento...</p>';
+        viewer.innerHTML = '<p style="text-align:center; color:#4a3728; padding:20px;">Cargando documento...</p>';
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
-        // DETECCIÓN DE NITIDEZ (Scale)
+        // Escala de nitidez según dispositivo
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const renderScale = isMobile ? 2.0 : 3.0;
 
@@ -224,14 +229,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
-                
-                // Calculamos el viewport inicial con la nitidez deseada
                 const viewport = page.getViewport({ scale: renderScale });
-                
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 
-                // Definimos el tamaño interno del canvas (resolución)
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
                 
@@ -239,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
             }
         } catch (err) { 
-            viewer.innerHTML = '<p style="color:white;">Error al cargar el PDF. Verifique que el archivo exista.</p>'; 
+            viewer.innerHTML = '<p style="color:red;">Error al cargar el PDF. Inténtelo de nuevo.</p>'; 
         }
     }
 
