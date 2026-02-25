@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
     <style>
-        /* RESET TOTAL */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -23,8 +22,9 @@
             flex-direction: column;
         }
 
+        /* AJUSTE DE TÍTULO (SUBIR POSICIÓN) */
         header {
-            padding: 15px 0 20px;
+            padding: 5px 0 5px; /* Reducción de espacio superior/inferior */
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
         }
@@ -34,27 +34,32 @@
             font-size: 3.5em;
             color: #4a3728;
             margin: 0;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            line-height: 1.1;
         }
 
-        main { flex: 1; padding: 20px; }
+        /* CONTENEDOR CON MEDIDAS SIMÉTRICAS */
+        main { 
+            flex: 1; 
+            padding: 30px 20px; /* Margen constante de 30px arriba y abajo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        /* CUADRÍCULA PARA PC */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
-            gap: 20px;
+            gap: 20px; /* Separación constante entre botones */
             max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
         }
 
-        /* BOTONES */
         button.app-btn {
             background: #f4e9d8;
             border: 2px solid #c9a86a;
             border-radius: 12px;
             padding: 15px;
-            font-size: 1.1em;
+            font-size: 1.05em;
             color: #4a3728;
             cursor: pointer;
             font-family: 'Sen', sans-serif;
@@ -65,37 +70,23 @@
             align-items: center; 
             justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
-        button.app-btn:hover {
-            background: #e8d8b0;
-            border-color: #d4af37;
-            transform: scale(1.02);
-        }
-
-        /* ===== MODAL ===== */
+        /* MODAL TOTALMENTE BLANCO */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             inset: 0;
             width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6); /* Fondo semi-oscuro tras el modal */
+            background-color: #ffffff; /* Fondo blanco solicitado */
         }
 
         .modal-content {
-            background-color: white; /* FONTO BLANCO TOTAL SOLICITADO */
-            margin: 1% auto;
-            padding: 10px;
-            border-radius: 8px;
-            width: 95%;
-            height: 98%;
-            max-width: 1100px;
-            position: relative;
+            background-color: #ffffff;
+            width: 100%; height: 100%;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         .modal-header {
@@ -103,15 +94,13 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            background-color: white;
+            padding: 10px 30px;
         }
 
         .modal-header h2 {
             font-family: 'UnifrakturCook', cursive;
             color: #4a3728;
-            font-size: 1.8em;
+            font-size: 2em;
             flex-grow: 1;
             text-align: center;
         }
@@ -119,49 +108,38 @@
         .modal-body {
             flex-grow: 1;
             overflow-y: auto;
+            background-color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: white; /* FONTO BLANCO DETRÁS DEL PDF */
+            padding: 10px;
         }
 
-        .close {
-            color: #3e2f1c;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-        }
+        .close { font-size: 50px; cursor: pointer; color: #3e2f1c; line-height: 0.8; }
 
         #pdfViewerContainer canvas {
-            margin: 0 auto 15px auto;
-            display: block;
+            margin-bottom: 20px;
             max-width: 100%;
-            height: auto !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Sombra suave en blanco */
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
 
-        /* ===== AJUSTE CELULAR: SIEMPRE VERTICAL ===== */
-        @media (max-width: 850px) { 
-            /* Se activa antes para tablets y celulares */
-            .button-grid {
-                grid-template-columns: 1fr !important; /* Fuerza una sola columna siempre */
-                max-width: 500px;
-            }
-            .modal-content {
-                width: 100% !important;
-                height: 100% !important;
-                margin: 0 !important;
-                border-radius: 0 !important;
-            }
-            .titulo-principal { font-size: 2.2em; }
-        }
-
+        /* FOOTER SIMÉTRICO */
         footer {
             background: #f2e8d5;
             padding: 15px;
             border-top: 1px solid #c9a86a;
-            margin-top: auto;
+            /* El espacio entre botones y footer lo da el padding de 'main' */
+        }
+
+        /* CELULAR: VERTICAL Y AJUSTADO */
+        @media (max-width: 900px) { 
+            .button-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px; /* Misma medida entre botones */
+                max-width: 400px;
+            }
+            .titulo-principal { font-size: 2.2em; }
+            main { padding: 20px; } /* Ajuste de aire para móviles */
         }
     </style>
 </head>
@@ -198,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const buttonGrid = document.getElementById("buttonGrid");
     const modal = document.getElementById("pdfModal");
-    const closeBtn = document.getElementById("closeModal");
     const viewer = document.getElementById("pdfViewerContainer");
     const modalTitle = document.getElementById('modalTitleText');
 
@@ -225,46 +202,39 @@ document.addEventListener('DOMContentLoaded', function() {
         const b = document.createElement('button');
         b.className = 'app-btn';
         b.innerHTML = info.label ? `${info.title}<br><span style="font-size:0.8em; opacity:0.8;">${info.label}</span>` : info.title;
-        b.onclick = function() { openModalAndRender(info.file, info.title); };
+        b.onclick = () => openModalAndRender(info.file, info.title);
         buttonGrid.appendChild(b);
     });
 
     async function openModalAndRender(url, title) {
         modalTitle.textContent = title;
-        viewer.innerHTML = '<p style="margin-top:50px;">Cargando documento...</p>';
+        viewer.innerHTML = '<p style="margin-top:50px;">Cargando nitidez 3.0...</p>';
         modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
 
         try {
             const pdf = await pdfjsLib.getDocument(url).promise;
             viewer.innerHTML = '';
-            
-            // ESCALAS SOLICITADAS: 3.0 para PC, 2.0 para Celulares
-            const isMobile = window.innerWidth <= 850;
-            const RENDER_SCALE = isMobile ? 2.0 : 3.0;
+            const RENDER_SCALE = window.innerWidth <= 900 ? 2.0 : 3.0;
 
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const viewport = page.getViewport({ scale: RENDER_SCALE });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d', { alpha: false });
-                
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-                
                 viewer.appendChild(canvas);
-                await page.render({ 
-                    canvasContext: context, 
-                    viewport: viewport,
-                    intent: 'print'
-                }).promise;
+                await page.render({ canvasContext: context, viewport: viewport, intent: 'print' }).promise;
             }
-        } catch (err) {
-            viewer.innerHTML = `<p style="margin-top:50px;">No se pudo cargar el PDF.</p>`;
-        }
+        } catch (err) { viewer.innerHTML = `<p>Error al cargar el PDF.</p>`; }
     }
 
-    closeBtn.onclick = () => { modal.style.display = "none"; viewer.innerHTML = ""; };
-    window.onclick = (e) => { if (e.target == modal) { modal.style.display = "none"; viewer.innerHTML = ""; } };
+    document.getElementById("closeModal").onclick = () => { 
+        modal.style.display = "none"; 
+        viewer.innerHTML = ""; 
+        document.body.style.overflow = 'auto';
+    };
 });
 </script>
 </body>
