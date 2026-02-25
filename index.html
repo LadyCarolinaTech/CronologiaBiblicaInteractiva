@@ -33,12 +33,11 @@
             color: #4a3728;
         }
 
-        /* MARGEN DE 15PX (MEDIDA VERDE) SIN ÁREAS ROJAS */
         main { 
             flex: 1; 
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; 
             padding: 15px; 
         }
 
@@ -47,7 +46,7 @@
             grid-template-columns: repeat(4, 1fr); 
             gap: 15px; 
             width: 100%;
-            max-width: 1200px;
+            max-width: 100%; 
         }
 
         button.app-btn {
@@ -64,7 +63,6 @@
             transition: all 0.3s ease;
         }
 
-        /* FOOTER SIMÉTRICO (VERDE Y AZUL IGUALES) */
         footer {
             background: #f2e8d5;
             padding: 15px 0; 
@@ -75,7 +73,6 @@
             text-align: center;
         }
 
-        /* MODAL CON TÍTULO CENTRADO */
         .modal {
             display: none;
             position: fixed;
@@ -92,14 +89,14 @@
 
         .modal-header {
             display: grid;
-            grid-template-columns: 50px 1fr 50px; /* CREA ESPACIO PARA CENTRAR EL TÍTULO */
+            grid-template-columns: 50px 1fr 50px; 
             align-items: center;
             padding: 10px 20px;
             border-bottom: 1px solid #ddd;
         }
 
         .modal-title {
-            grid-column: 2; /* FUERZA AL TÍTULO A ESTAR EN EL CENTRO */
+            grid-column: 2; 
             text-align: center;
             font-family: 'UnifrakturCook', cursive;
             font-size: 2.2em;
@@ -116,26 +113,35 @@
         .modal-body {
             flex: 1;
             overflow-y: auto;
-            background-color: white;
-            padding: 20px;
+            background-color: #525659; /* Fondo gris tipo lector PDF para mejor contraste */
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* VISOR SIN DESBORDE (PARA PC Y CELULAR) */
-        #pdfViewerContainer { width: 100%; max-width: 1000px; }
+        /* AJUSTE DINÁMICO DEL PDF */
+        #pdfViewerContainer { 
+            width: 100%; 
+            max-width: 900px; /* Tamaño ideal para lectura en PC */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         #pdfViewerContainer canvas {
-            width: 100% !important;
+            max-width: 100%; /* Se ajusta al ancho del celular sin salirse */
             height: auto !important;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background-color: white;
         }
 
         @media (max-width: 900px) { 
-            .button-grid { grid-template-columns: 1fr; max-width: 350px; }
+            .button-grid { grid-template-columns: 1fr; max-width: 100%; }
             .titulo-principal { font-size: 2.2em; }
-            .modal-title { font-size: 1.8em; }
+            .modal-title { font-size: 1.5em; }
+            .modal-body { padding: 10px 5px; }
         }
     </style>
 </head>
@@ -204,9 +210,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function openModalAndRender(url, title) {
         modalTitle.textContent = title;
-        viewer.innerHTML = '<p style="text-align:center; padding:20px;">Cargando documento...</p>';
+        viewer.innerHTML = '<p style="text-align:center; color:white; padding:20px;">Cargando documento...</p>';
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
+
+        // DETECCIÓN DE NITIDEZ (Scale)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const renderScale = isMobile ? 2.0 : 3.0;
 
         try {
             const pdf = await pdfjsLib.getDocument(url).promise;
@@ -214,15 +224,23 @@ document.addEventListener('DOMContentLoaded', function() {
             
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
-                const viewport = page.getViewport({ scale: 2.0 });
+                
+                // Calculamos el viewport inicial con la nitidez deseada
+                const viewport = page.getViewport({ scale: renderScale });
+                
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
+                
+                // Definimos el tamaño interno del canvas (resolución)
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
+                
                 viewer.appendChild(canvas);
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
             }
-        } catch (err) { viewer.innerHTML = '<p>Error al cargar el PDF.</p>'; }
+        } catch (err) { 
+            viewer.innerHTML = '<p style="color:white;">Error al cargar el PDF. Verifique que el archivo exista.</p>'; 
+        }
     }
 
     document.getElementById("closeModal").onclick = () => { 
