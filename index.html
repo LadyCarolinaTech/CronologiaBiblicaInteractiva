@@ -21,7 +21,6 @@
         }
 
         header {
-            /* AJUSTE SOLICITADO: 10px de margen superior en el área azul */
             padding: 10px 0 20px 0; 
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
@@ -81,7 +80,6 @@
             margin-left: 5px;
         }
 
-        /* MODAL Y VISOR */
         .modal {
             display: none;
             position: fixed;
@@ -177,73 +175,3 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
-
-    const buttonGrid = document.getElementById("buttonGrid");
-    const modal = document.getElementById("pdfModal");
-    const viewer = document.getElementById("pdfViewerContainer");
-    const modalTitle = document.getElementById('modalTitleText');
-
-    const buttons = [
-        { file: "dedicatoria.pdf", title: "Dedicatoria" },
-        { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
-        { file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
-        { file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
-        { file: "profetas.pdf", title: "Profetas" },
-        { file: "division del reino.pdf", title: "División del Reino" },
-        { file: "preexilio.pdf", title: "Preexilio" },
-        { file: "exilio y caída.pdf", title: "Exilio y Caída" },
-        { file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
-        { file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
-        { file: "dinastias.pdf", title: "Dinastías Reales" },
-        { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
-        { file: "el templo.pdf", title: "El Templo de Jerusalén" },
-        { file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
-        { file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
-        { file: "Anexos.pdf", title: "Anexos" }
-    ];
-
-    buttons.forEach(info => {
-        const b = document.createElement('button');
-        b.className = 'app-btn';
-        b.textContent = info.title;
-        b.onclick = () => openModalAndRender(info.file, info.title);
-        buttonGrid.appendChild(b);
-    });
-
-    async function openModalAndRender(url, title) {
-        modalTitle.textContent = title;
-        viewer.innerHTML = '<p style="text-align:center; color:#4a3728; padding:20px;">Cargando documento...</p>';
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const renderScale = isMobile ? 2.0 : 3.0;
-
-        try {
-            const pdf = await pdfjsLib.getDocument(url).promise;
-            viewer.innerHTML = '';
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const viewport = page.getViewport({ scale: renderScale });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                viewer.appendChild(canvas);
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-            }
-        } catch (err) { 
-            viewer.innerHTML = '<p style="color:red; text-align:center;">Error al cargar el PDF.</p>'; 
-        }
-    }
-
-    document.getElementById("closeModal").onclick = () => { 
-        modal.style.display = "none"; 
-        viewer.innerHTML = ""; 
-        document.body.style.overflow = 'auto';
-    };
-});
-</script>
-</body>
-</html>
