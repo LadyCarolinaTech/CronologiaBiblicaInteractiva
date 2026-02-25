@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    <title>Cronología Bíblica</title>
+    <title>Cronología Bíblica Interactiva</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
@@ -22,9 +22,9 @@
             flex-direction: column;
         }
 
-        /* CABECERA */
+        /* CABECERA AJUSTADA A 15PX ABAJO */
         header {
-            padding: 10px 0; 
+            padding: 10px 0 15px 0; /* 15px de separación con los botones */
             background-color: rgba(244, 233, 216, 0.6);
             border-bottom: 2px solid #c9a86a;
         }
@@ -37,10 +37,10 @@
             line-height: 1;
         }
 
-        /* CONTENEDOR PRINCIPAL CON ESPACIADO UNIFORME DE 15PX */
+        /* CONTENEDOR CON REGLA DE 15PX EN TODAS LAS "X" MARCADAS */
         main { 
             flex: 1; 
-            padding: 15px; /* DISTANCIA UNIFORME SOLICITADA (15px) */
+            padding: 0 15px 15px 15px; /* 15px a los lados y abajo (Flechas negras) */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -49,9 +49,10 @@
         .button-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
-            gap: 15px; /* DISTANCIA ENTRE BOTONES SOLICITADA (15px) */
+            gap: 15px; /* DISTANCIA ENTRE BOTONES SOLICITADA */
             max-width: 1200px;
             width: 100%;
+            margin-top: 15px; /* 15px constantes tras el título */
         }
 
         button.app-btn {
@@ -123,14 +124,15 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
 
-        /* FOOTER */
+        /* FOOTER CON 15PX TRAS TU NOMBRE */
         footer {
             background: #f2e8d5;
-            padding: 15px;
+            padding: 15px; /* 15px de margen interno uniforme */
             border-top: 1px solid #c9a86a;
+            font-size: 0.9em;
         }
 
-        /* CELULAR: VERTICAL Y AJUSTADO */
+        /* CELULAR: VERTICAL Y SIMÉTRICO */
         @media (max-width: 900px) { 
             .button-grid {
                 grid-template-columns: 1fr !important;
@@ -164,7 +166,7 @@
 </div>
 
 <footer>
-    <strong>© 2026 Cronología Bíblica inspirada en las Sagradas Escrituras Lady Carolina Muñoz Sierra</strong>
+    © 2026 Cronología Bíblica — <strong>Lady Carolina Muñoz Sierra</strong>
 </footer>
 
 <script>
