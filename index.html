@@ -37,31 +37,58 @@
         main { 
             flex: 1; 
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center; 
-            padding: 15px; 
+            padding: 20px 15px; 
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .button-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 15px; 
+            display: flex;
+            justify-content: center;
             width: 100%;
-            max-width: 100%; 
+            margin-bottom: 25px;
         }
 
         button.app-btn {
             background: #f4e9d8;
             border: 2px solid #c9a86a;
             border-radius: 12px;
-            padding: 15px;
-            font-size: 1.05em; 
+            padding: 15px 30px;
+            font-size: 1.1em; 
             color: #4a3728;
             cursor: pointer;
             font-family: 'Sen', sans-serif;
             font-weight: 700;
-            min-height: 90px;
+            min-height: 70px;
             transition: all 0.3s ease;
+        }
+
+        button.app-btn:hover {
+            background: #e2d2b8;
+        }
+
+        /* Estilos para la nota informativa */
+        .mensaje-nota {
+            background-color: rgba(244, 233, 216, 0.7);
+            border: 1px solid #c9a86a;
+            border-radius: 12px;
+            padding: 20px 25px;
+            text-align: justify;
+            color: #4a3728;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .mensaje-nota p {
+            margin-bottom: 10px;
+        }
+
+        .mensaje-nota p:last-child {
+            margin-bottom: 0;
         }
 
         footer {
@@ -139,7 +166,6 @@
         }
 
         @media (max-width: 900px) { 
-            .button-grid { grid-template-columns: 1fr; }
             .titulo-principal { font-size: 3.5em; } 
             header { padding: 10px 0; }
         }
@@ -153,6 +179,13 @@
 
 <main>
     <div class="button-grid" id="buttonGrid"></div>
+
+    <div class="mensaje-nota">
+        <p><strong>Cordial saludo, Hna. María Luisa.</strong></p>
+        <p>
+            Dado el peso de los archivos PDF de <em>Figuras Proféticas</em>, su visualización en la página puede presentar demoras o cargas incompletas, ya que GitHub no está diseñado como un visor de documentos de alto rendimiento. Por este motivo, le he enviado a su correo electrónico un enlace directo desde el cual podrá visualizarlos y descargarlos sin ningún inconveniente.
+        </p>
+    </div>
 </main>
 
 <div id="pdfModal" class="modal">
@@ -183,23 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const viewer = document.getElementById("pdfViewerContainer");
     const modalTitle = document.getElementById('modalTitleText');
 
+    // Se conserva únicamente la opción de Dedicatoria
     const buttons = [
-        { file: "dedicatoria.pdf", title: "Dedicatoria" },
-        { file: "genealogias.pdf", title: "Genealogías Bíblicas" },
-        { file: "patriarcas.pdf", title: "Periodo de los Patriarcas" },
-        { file: "exodo, jueces y monarquia.pdf", title: "De la Teocracia a la Monarquía" },
-        { file: "profetas.pdf", title: "Profetas" },
-        { file: "division del reino.pdf", title: "División del Reino" },
-        { file: "preexilio.pdf", title: "Preexilio" },
-        { file: "exilio y caída.pdf", title: "Exilio y Caída" },
-        { file: "posexilio de judá.pdf", title: "Posexilio de Judá" },
-        { file: "periodo intertestamentario.pdf", title: "Periodo Intertestamentario" },
-        { file: "dinastias.pdf", title: "Dinastías Reales" },
-        { file: "apostoles.pdf", title: "Los Apóstoles y el Nuevo Testamento" },
-        { file: "el templo.pdf", title: "El Templo de Jerusalén" },
-        { file: "representaciones.pdf", title: "Figuras Proféticas (A-L)" },
-        { file: "representaciones2.pdf", title: "Figuras Proféticas (M-Z)" },
-        { file: "Anexos.pdf", title: "Anexos" }
+        { file: "dedicatoria.pdf", title: "Dedicatoria" }
     ];
 
     buttons.forEach(info => {
@@ -211,13 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function openModalAndRender(url, title) {
-
-        // 🔹 ARREGLO APLICADO AQUÍ
-        if (title.includes("Figuras Proféticas")) {
-            modalTitle.textContent = "Figuras Proféticas";
-        } else {
-            modalTitle.textContent = title;
-        }
+        modalTitle.textContent = title;
 
         viewer.innerHTML = '<p style="text-align:center; color:#4a3728; padding:20px;">Cargando documento...</p>';
         modal.style.display = 'block';
